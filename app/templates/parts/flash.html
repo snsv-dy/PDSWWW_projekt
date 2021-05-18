@@ -1,5 +1,5 @@
-<section class="width-100 bg-secondary">
-    <div class="container" id="notifications" data-aos="fade-right" data-aos-duration="500">
+<section class="width-100 bg-secondary" id="flash-notifications">
+    <div class="container" id="notifications">
         {% for category, message in get_flashed_messages(with_categories=true) %}
         <div class="row">
             <div class="col-12">

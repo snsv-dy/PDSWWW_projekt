@@ -7273,7 +7273,7 @@ h3 {
       font-size: 1.5em; } }
 
 .masthead {
-  padding-top: calc(6rem + 74px);
+  padding-top: calc(6rem + 0px);
   padding-bottom: 6rem; }
   .masthead .masthead-heading {
     font-size: 2.75rem;
@@ -7285,7 +7285,7 @@ h3 {
 
 @media (min-width: 992px) {
   .masthead {
-    padding-top: calc(6rem + 104px);
+    padding-top: calc(6rem + 0px);
     padding-bottom: 6rem; }
     .masthead .masthead-heading {
       font-size: 4rem;
@@ -7414,3 +7414,15 @@ form .row:first-child .floating-label-form-group {
 
 .btn-social {
   margin-bottom: 0.5rem; }
+
+@media (min-width: 992px) {
+    #flash-notifications {
+        margin-top: 100px;
+    }
+}
+
+@media (max-width: 992px) {
+    #flash-notifications {
+        margin-top: 80px;
+    }
+}
