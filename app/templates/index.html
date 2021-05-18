@@ -1,6 +1,16 @@
 {% extends "standard.html" %}
 
-{% block content %}
+{% block styles %}
+    {{ super() }}
+    <link href="{{ url_for('static',filename='css/index-styles.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block menu %}
+<li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger text-uppercase" href="#about">Logowanie</a></li>
+<li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger text-uppercase" href="#contact">Kontakt</a></li>
+{% endblock %}
+`
+{% block content %}`
 <section class="masthead bg-primary text-white text-center">
     <div class="container d-flex align-items-center flex-column">
         <img class="masthead-avatar mb-5" src="{{ url_for('static',filename='images/tick_white.png') }}" alt="">
@@ -15,8 +25,12 @@
             <div class="divider-custom-line"></div>
         </div>
 
+        <form>
+            <input type="text" size="8" maxlength="5" placeholder="12345" id="test-code">
+        </form>
+
         <!-- Masthead Subheading-->
-        <p class="pre-wrap masthead-subheading font-weight-light mb-0">Po prostu</p>
+        <p class="pre-wrap masthead-subheading font-weight-light mb-0">Podaj kod testu</p>
     </div>
 </section>
 
@@ -24,7 +38,7 @@
     <div class="container">
         <!-- Section Heading-->
         <div class="text-center">
-            <h2 class="page-section-heading text-secondary mb-0 d-inline-block">PORTFOLIO</h2>
+            <h2 class="page-section-heading text-secondary mb-0 d-inline-block text-uppercase">Jak to działa?</h2>
         </div>
 
         <!-- Icon Divider-->
@@ -35,29 +49,21 @@
         </div>
 
         <!-- Content -->
-        <div class="row justify-content-center">
-            <!-- Something -->
-        </div>
-    </div>
-</section>
+        <div class="row justify-content-center text-center">
+            <div class="col-sm-12 col-md-6">
+                <img id="student-image" class="mb-5 img-fluid" src="{{ url_for('static',filename='images/student.png') }}" alt="">
+                <h3 class="page-section-heading text-secondary mb-0 d-inline-block text-uppercase mb-3">Dla ucznia</h3>
+                <p class="text-justify">Z punktu widzenia ucznia napisanie testu jest zupełnie proste. Wystarczy, że w polu powyżej wpisze on <b>kod testu</b>, który został przekazany mu przez nauczyciela. Uczniowi wyświetlą się informację dotyczące tego co go czeka: ilość poszczególnych pytań oraz czas na odpowiedź.</p>
+                <p class="text-justify">W trakcie testu uczeń śledzi na bieżąco czas pozostały do końca i może spobodnie wracać do pytań poprzednich. Gdy uczeń zakończy lub minie czas, to zostaje mu wyświetlona informacja o poprawności pytań zamkniętych, natomiast pytania otwarte muszą zostać sprawdzone manualnie przez nauczyciela. Gdy nauczyciel sprawdzi jego pracę, to zostaje wysłane na adres ucznia kompletne podsumowanie testu.</p>
+            </div>
+            <div class="col-sm-12 col-md-6">
+                <img id="teacher-image" class="mb-5" src="{{ url_for('static',filename='images/teacher.png') }}" alt="">
+                <h3 class="page-section-heading text-secondary mb-0 d-inline-block text-uppercase mb-3">Dla nauczyciela</h3>
+                <p class="text-justify">Aby tworzyć testy nauczyciel musi się zarejestrować, a następnie zalogować na swoje konto. Dzięki temu zyskuje dostęp do swojego <b>panelu zarządzania testami</b>. Może w nim stworzyć i zapisać nowy test lub uruchomić test już stworzony. Gdy to zrobi to dostaje kod, który następnie przekazuje swoim uczniom.</p>
+                <p class="text-justify">O wyznaczonej godzinie test się rozpoczyna, uczniowie piszą testy, a wszystkie odpowiedzi trafiają na konto nauczyciela. W dowolnej chwili nauczyciel może skorzystać z <b>panelu oceny testów</b>, aby przyznać punktację za pytania otwarte, jeżeli takie występowały. Gdy to zrobi, to informacja o uzyskanej liczbie punktów wraz z oceną końcową jest wysyłana do ucznia.</p>
+            </div>
 
-<section class="page-section">
-    <div class="container">
-        <!-- Heading-->
-        <div class="text-center">
-            <h2 class="page-section-heading text-secondary d-inline-block mb-0">SECTION 3</h2>
-        </div>
-
-        <!-- Icon Divider-->
-        <div class="divider-custom">
-            <div class="divider-custom-line"></div>
-            <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
-            <div class="divider-custom-line"></div>
-        </div>
-
-        <!-- Content-->
-        <div class="row justify-content-center">
-            <!-- Something -->
+            <h2 class="page-section-heading text-secondary mb-0 d-inline-block text-uppercase mt-5">To takie proste :)</h2>
         </div>
     </div>
 </section>

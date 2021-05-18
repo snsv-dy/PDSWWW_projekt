@@ -1,0 +1,18 @@
+#test-code {
+    font-size: 30pt;
+    font-family: monospace;
+    text-align: center;
+}
+
+#next-button {
+    display: inline;
+    height: 60px;
+    width: auto;
+    vertical-align: middle;
+}
+
+#student-image, #teacher-image {
+    height: 200px;
+    display: block;
+    margin: auto;
+}

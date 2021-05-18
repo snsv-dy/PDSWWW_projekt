@@ -10,5 +10,4 @@ def index():
     # db.session.add(u)
     # db.session.commit()
 
-    user = {'username': 'Jacek'}
     return render_template('index.html')
