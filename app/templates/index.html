@@ -1,8 +1,64 @@
-<html>
-    <head>
-        <title>{{ title }} - Microblog</title>
-    </head>
-    <body>
-        <h1>Hello, {{ user.username }}!</h1>
-    </body>
-</html>
+{% extends "standard.html" %}
+
+{% block content %}
+<section class="masthead bg-primary text-white text-center">
+    <div class="container d-flex align-items-center flex-column">
+        <img class="masthead-avatar mb-5" src="assets/img/avataaars.svg" alt="">
+
+        <!-- Heading-->
+        <h1 class="masthead-heading mb-0">SZYBKI TEST</h1>
+
+        <!-- Icon Divider-->
+        <div class="divider-custom divider-light">
+            <div class="divider-custom-line"></div>
+            <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
+            <div class="divider-custom-line"></div>
+        </div>
+
+        <!-- Masthead Subheading-->
+        <p class="pre-wrap masthead-subheading font-weight-light mb-0">Po prostu</p>
+    </div>
+</section>
+
+<section class="page-section portfolio">
+    <div class="container">
+        <!-- Section Heading-->
+        <div class="text-center">
+            <h2 class="page-section-heading text-secondary mb-0 d-inline-block">PORTFOLIO</h2>
+        </div>
+
+        <!-- Icon Divider-->
+        <div class="divider-custom">
+            <div class="divider-custom-line"></div>
+            <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
+            <div class="divider-custom-line"></div>
+        </div>
+
+        <!-- Content -->
+        <div class="row justify-content-center">
+            <!-- Something -->
+        </div>
+    </div>
+</section>
+
+<section class="page-section">
+    <div class="container">
+        <!-- Heading-->
+        <div class="text-center">
+            <h2 class="page-section-heading text-secondary d-inline-block mb-0">SECTION 3</h2>
+        </div>
+
+        <!-- Icon Divider-->
+        <div class="divider-custom">
+            <div class="divider-custom-line"></div>
+            <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
+            <div class="divider-custom-line"></div>
+        </div>
+
+        <!-- Content-->
+        <div class="row justify-content-center">
+            <!-- Something -->
+        </div>
+    </div>
+</section>
+{% endblock %}

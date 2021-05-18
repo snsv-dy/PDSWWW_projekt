@@ -6,9 +6,9 @@ from app.models import User
 @app.route('/')
 @app.route('/index')
 def index():
-    u = User(username='susan', email='susan@example.com')
-    db.session.add(u)
-    db.session.commit()
+    # u = User(username='susan', email='susan@example.com')
+    # db.session.add(u)
+    # db.session.commit()
 
     user = {'username': 'Jacek'}
-    return render_template('index.html', title='Home', user=user)
+    return render_template('index.html')
