@@ -1,0 +1,222 @@
+{% extends "basic.html" %}
+
+{% block styles %}
+    {{ super() }}
+    <link href="{{ url_for('static',filename='css/manage-styles.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block menu %}
+<li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger text-uppercase" href="#logout">Wyloguj</a></li>
+{% endblock %}
+
+{% block content %}
+<section class="page-section">
+    <div class="file_manager">
+        <div class="container">
+            <h1 class="page-heading text-center text-uppercase">Twoje testy</h1>
+            <div class="divider-custom">
+                <div class="divider-custom-line"></div>
+                <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
+                <div class="divider-custom-line"></div>
+            </div>
+            <div class="button-bar row justify-content-center">
+                <div class="button-bar">
+                    <button class="btn btn-primary"><i class="fa fa-download"></i> Importuj test</button>
+                    <button class="btn btn-primary"><i class="fa fa-plus-circle"></i> Stwórz nowy test</button>
+                    <button class="btn btn-primary"><i class="fas fa-search"></i> Szukaj</button>
+                </div>
+            </div>
+
+            <div class="row clearfix">
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <div class="card">
+                        <div class="file">
+                            <a href="javascript:void(0);" data-toggle="modal" data-target="#test_1">
+                                <div class="hover">
+                                    <button type="button" class="btn btn-icon btn-danger">
+                                        <i class="fa fa-pen"></i>
+                                    </button>
+                                </div>
+                                <div class="icon">
+                                    <i class="fa fa-file fa-8x text-secondary"></i>
+                                </div>
+                                <div class="file-name">
+                                    <p class="m-b-5 text-muted">Sprawdzian z przyrody</p>
+                                    <small>Liczba Pytań: 7<span class="date text-muted">2 Maj, 2021</span></small>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <div class="card">
+                        <div class="file">
+                            <a href="javascript:void(0);" data-toggle="modal" data-target="#test_1">
+                                <div class="hover">
+                                    <button type="button" class="btn btn-icon btn-danger">
+                                        <i class="fa fa-pen"></i>
+                                    </button>
+                                </div>
+                                <div class="icon">
+                                    <i class="fa fa-file fa-8x text-secondary"></i>
+                                </div>
+                                <div class="file-name">
+                                    <p class="m-b-5 text-muted">Sprawdzian z przyrody</p>
+                                    <small>Liczba Pytań: 7<span class="date text-muted">2 Maj, 2021</span></small>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <div class="card">
+                        <div class="file">
+                            <a href="javascript:void(0);" data-toggle="modal" data-target="#test_1">
+                                <div class="hover">
+                                    <button type="button" class="btn btn-icon btn-danger">
+                                        <i class="fa fa-pen"></i>
+                                    </button>
+                                </div>
+                                <div class="icon">
+                                    <i class="fa fa-file fa-8x text-secondary"></i>
+                                </div>
+                                <div class="file-name">
+                                    <p class="m-b-5 text-muted">Sprawdzian z przyrody</p>
+                                    <small>Liczba Pytań: 7<span class="date text-muted">2 Maj, 2021</span></small>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <div class="card">
+                        <div class="file">
+                            <a href="javascript:void(0);" data-toggle="modal" data-target="#test_1">
+                                <div class="hover">
+                                    <button type="button" class="btn btn-icon btn-danger">
+                                        <i class="fa fa-pen"></i>
+                                    </button>
+                                </div>
+                                <div class="icon">
+                                    <i class="fa fa-file fa-8x text-secondary"></i>
+                                </div>
+                                <div class="file-name">
+                                    <p class="m-b-5 text-muted">Sprawdzian z przyrody</p>
+                                    <small>Liczba Pytań: 7<span class="date text-muted">2 Maj, 2021</span></small>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <div class="card">
+                        <div class="file">
+                            <a href="javascript:void(0);" data-toggle="modal" data-target="#test_1">
+                                <div class="hover">
+                                    <button type="button" class="btn btn-icon btn-danger">
+                                        <i class="fa fa-pen"></i>
+                                    </button>
+                                </div>
+                                <div class="icon">
+                                    <i class="fa fa-file fa-8x text-secondary"></i>
+                                </div>
+                                <div class="file-name">
+                                    <p class="m-b-5 text-muted">Sprawdzian z przyrody</p>
+                                    <small>Liczba Pytań: 7<span class="date text-muted">2 Maj, 2021</span></small>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <div class="card">
+                        <div class="file">
+                            <a href="javascript:void(0);" data-toggle="modal" data-target="#test_1">
+                                <div class="hover">
+                                    <button type="button" class="btn btn-icon btn-danger">
+                                        <i class="fa fa-pen"></i>
+                                    </button>
+                                </div>
+                                <div class="icon">
+                                    <i class="fa fa-file fa-8x text-secondary"></i>
+                                </div>
+                                <div class="file-name">
+                                    <p class="m-b-5 text-muted">Sprawdzian z przyrody</p>
+                                    <small>Liczba Pytań: 7<span class="date text-muted">2 Maj, 2021</span></small>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <div class="card">
+                        <div class="file">
+                            <a href="javascript:void(0);" data-toggle="modal" data-target="#test_1">
+                                <div class="hover">
+                                    <button type="button" class="btn btn-icon btn-danger">
+                                        <i class="fa fa-pen"></i>
+                                    </button>
+                                </div>
+                                <div class="icon">
+                                    <i class="fa fa-file fa-8x text-secondary"></i>
+                                </div>
+                                <div class="file-name">
+                                    <p class="m-b-5 text-muted">Sprawdzian z przyrody</p>
+                                    <small>Liczba Pytań: 7<span class="date text-muted">2 Maj, 2021</span></small>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <div class="card">
+                        <div class="file">
+                            <a href="javascript:void(0);" data-toggle="modal" data-target="#test_1">
+                                <div class="hover">
+                                    <button type="button" class="btn btn-icon btn-danger">
+                                        <i class="fa fa-pen"></i>
+                                    </button>
+                                </div>
+                                <div class="icon">
+                                    <i class="fa fa-file fa-8x text-secondary"></i>
+                                </div>
+                                <div class="file-name">
+                                    <p class="m-b-5 text-muted">Sprawdzian z przyrody</p>
+                                    <small>Liczba Pytań: 7<span class="date text-muted">2 Maj, 2021</span></small>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="portfolio-modal modal fade" id="test_1" tabindex="-1" role="dialog" aria-labelledby="portfolioModal1Label" aria-hidden="true">
+            <div class="modal-dialog modal-xl" role="document">
+                <div class="modal-content">
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true"><i class="fas fa-times"></i></span>
+                    </button>
+                    <div class="modal-body text-center">
+                        <div class="container">
+                            <div class="row justify-content-center">
+                                <div class="col-lg-8">
+                                    <!-- Portfolio Modal - Title-->
+                                    <h2 class="portfolio-modal-title text-secondary text-uppercase mb-0" id="portfolioModal1Label">Sprawdzian z przyrody</h2>
+                                    <!-- Icon Divider-->
+                                    <div class="divider-custom">
+                                        <div class="divider-custom-line"></div>
+                                        <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
+                                        <div class="divider-custom-line"></div>
+                                    </div>
+                                    <!-- Portfolio Modal - Text-->
+                                    <p class="mb-5">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Mollitia neque assumenda ipsam nihil, molestias magnam, recusandae quos quis inventore quisquam velit asperiores, vitae? Reprehenderit soluta, eos quod consequuntur itaque. Nam.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
