@@ -13,18 +13,16 @@
 <section class="page-section">
     <div class="file_manager">
         <div class="container">
-            <h1 class="page-heading text-center text-uppercase">Twoje testy</h1>
+            <h1 class="masthead-heading text-center text-uppercase mb-0">Twoje testy</h1>
             <div class="divider-custom">
                 <div class="divider-custom-line"></div>
                 <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
                 <div class="divider-custom-line"></div>
             </div>
             <div class="button-bar row justify-content-center">
-                <div class="button-bar">
-                    <button class="btn btn-primary"><i class="fa fa-download"></i> Importuj test</button>
-                    <button class="btn btn-primary"><i class="fa fa-plus-circle"></i> Stwórz nowy test</button>
-                    <button class="btn btn-primary"><i class="fas fa-search"></i> Szukaj</button>
-                </div>
+                <button class="btn btn-primary"><i class="fas fa-download"></i> Importuj test</button>
+                <button class="btn btn-primary"><i class="fas fa-plus-circle"></i> Stwórz nowy test</button>
+                <button class="btn btn-primary"><i class="fas fa-search"></i> Szukaj</button>
             </div>
 
             <div class="row clearfix">
@@ -189,33 +187,105 @@
                     </div>
                 </div>
             </div>
-            <div class="portfolio-modal modal fade" id="test_1" tabindex="-1" role="dialog" aria-labelledby="portfolioModal1Label" aria-hidden="true">
-            <div class="modal-dialog modal-xl" role="document">
-                <div class="modal-content">
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true"><i class="fas fa-times"></i></span>
-                    </button>
-                    <div class="modal-body text-center">
-                        <div class="container">
-                            <div class="row justify-content-center">
-                                <div class="col-lg-8">
-                                    <!-- Portfolio Modal - Title-->
-                                    <h2 class="portfolio-modal-title text-secondary text-uppercase mb-0" id="portfolioModal1Label">Sprawdzian z przyrody</h2>
-                                    <!-- Icon Divider-->
-                                    <div class="divider-custom">
-                                        <div class="divider-custom-line"></div>
-                                        <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
-                                        <div class="divider-custom-line"></div>
+        </div>
+    </div>
+    <div class="portfolio-modal modal fade" id="test_1" tabindex="-1" role="dialog" aria-labelledby="portfolioModal1Label" aria-hidden="true">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content">
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><i class="fas fa-times"></i></span>
+                </button>
+                <div class="modal-body text-center">
+                    <div class="container">
+                        <div class="row justify-content-center">
+                            <div class="col-lg-8">
+                                <!-- Portfolio Modal - Title-->
+                                <h2 class="portfolio-modal-title text-secondary text-uppercase mb-0" id="portfolioModal1Label">Sprawdzian z przyrody</h2>
+                                <!-- Icon Divider-->
+                                <div class="divider-custom">
+                                    <div class="divider-custom-line"></div>
+                                    <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
+                                    <div class="divider-custom-line"></div>
+                                </div>
+                                <div class="stats">
+                                    <div class="icon">
+                                        <i class="fas fa-tasks fa-2x text-secondary"></i>
+                                        <p class="masthead-subheading font-weight-light mb-0">3</p>
                                     </div>
-                                    <!-- Portfolio Modal - Text-->
-                                    <p class="mb-5">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Mollitia neque assumenda ipsam nihil, molestias magnam, recusandae quos quis inventore quisquam velit asperiores, vitae? Reprehenderit soluta, eos quod consequuntur itaque. Nam.</p>
+                                    <div class="icon">
+                                        <i class="fas fa-list-ul fa-2x text-secondary"></i>
+                                        <p class="masthead-subheading font-weight-light mb-0">5</p>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="fas fa-edit fa-2x text-secondary"></i>
+                                        <p class="masthead-subheading font-weight-light mb-0">2</p>
+                                    </div>
+                                </div>
+                                <h3 class="masthead-subheading text-center text-uppercase">Zakończone terminy</h3>
+                                <table id="done" class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Nazwa terminu</th>
+                                            <th>Data</th>
+                                            <th>Sprawdzono</th>
+                                            <th>Akcja</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Termin 1</td>
+                                            <td>2021/04/25 14:20</td>
+                                            <td>23/30</td>
+                                            <td>
+                                                <button class="btn btn-primary mr-1"><i class="fas fa-eye"></i></button>
+                                                <button class="btn btn-primary btn-danger"><i class="fas fa-trash-alt"></i></button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Termin 1</td>
+                                            <td>2021/04/25 14:20</td>
+                                            <td>23/30</td>
+                                            <td>
+                                                <button class="btn btn-primary mr-1"><i class="fas fa-eye"></i></button>
+                                                <button class="btn btn-primary btn-danger"><i class="fas fa-trash-alt"></i></button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                                <h3 class="masthead-subheading text-center text-uppercase">Zaplanowane terminy</h3>
+                                <table id="upcoming" class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Nazwa terminu</th>
+                                            <th>Data</th>
+                                            <th>Kod</th>
+                                            <th>Akcja</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Termin 1</td>
+                                            <td>2021/04/25 14:20</td>
+                                            <td>xyWsEF</td>
+                                            <td>
+                                                <button class="btn btn-primary mr-1"><i class="fas fa-pen"></i></button>
+                                                <button class="btn btn-primary btn-danger"><i class="fas fa-trash-alt"></i></button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                                <div class="button-bar row justify-content-center">
+                                    <button class="btn btn-primary"><i class="fas fa-pen"></i> Edytuj test</button>
+                                    <button class="btn btn-primary"><i class="fas fa-plus-circle"></i> Dodaj termin</button>
+                                    <button class="btn btn-primary btn-danger"><i class="fas fa-trash-alt"></i> Usuń test</button>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
         </div>
     </div>
 </section>

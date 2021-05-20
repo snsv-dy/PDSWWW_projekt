@@ -2,7 +2,7 @@ body {
     background-color: #f4f7f6;
 }
 .button-bar {
-    margin-bottom: 14px;
+    margin-bottom: 30px;
 }
 .button-bar .btn, .input-group {
     margin-right: 20px;
@@ -84,4 +84,11 @@ body {
 }
 a:hover {
     text-decoration:none;
+}
+.stats .icon {
+    display: inline-block;
+    margin: 0 20px 30px 20px;
+}
+.table tbody tr td {
+    vertical-align: middle;
 }
