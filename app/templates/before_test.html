@@ -1,0 +1,39 @@
+{% extends "basic.html" %}
+
+{% block styles %}
+    {{ super() }}
+    <link href="{{ url_for('static',filename='css/before-test-styles.css') }}" rel="stylesheet">
+{% endblock %}
+
+
+{% block content %}
+<section class="page-section">
+    <div class="before-test center-block text-center">
+        <h1 class="masthead-heading text-uppercase mb-0">Test z przyrody</h1>
+        <h4 class="masthead-subheading mb-0 text-muted">Termin 1</h4>
+        <div class="divider-custom">
+            <div class="divider-custom-line"></div>
+            <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
+            <div class="divider-custom-line"></div>
+        </div>
+        <h5 class="masthead-subheading">Autor: Jan Kowalski</h5>
+        <h5 class="masthead-subheading">Czas podejścia: 30 min</h5>
+        <div class="stats">
+            <div class="icon" data-toggle="tooltip" data-placement="top" title="Pytania wielokrotnego wyboru">
+                <i class="fas fa-tasks fa-2x text-secondary"></i>
+                <p class="masthead-subheading font-weight-light mb-0">3</p>
+            </div>
+            <div class="icon" data-toggle="tooltip" data-placement="top" title="Pytania jednokrotnego wyboru">
+                <i class="fas fa-list-ul fa-2x text-secondary"></i>
+                <p class="masthead-subheading font-weight-light mb-0">5</p>
+            </div>
+            <div class="icon" data-toggle="tooltip" data-placement="top" title="Pytania otwarte">
+                <i class="fas fa-edit fa-2x text-secondary"></i>
+                <p class="masthead-subheading font-weight-light mb-0">2</p>
+            </div>
+        </div>
+        <p class="text-center text-danger">Uwaga! Nie można nawigować pomiędzy pytaniami</p>
+        <button class="btn btn-primary btn-lg"><i class="fas fa-hand-pointer"></i> Rozpocznij test</button>
+    </div>
+</section>
+{% endblock %}

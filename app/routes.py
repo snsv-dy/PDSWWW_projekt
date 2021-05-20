@@ -15,6 +15,10 @@ def index():
 def manage():
     return render_template('manage.html')
 
+@app.route('/before_test')
+def before_test():
+    return render_template('before_test.html')
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
