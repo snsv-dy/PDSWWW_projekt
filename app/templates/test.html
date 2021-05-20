@@ -1,0 +1,113 @@
+{% extends "standard.html" %}
+
+{% block styles %}
+    {{ super() }}
+    <link href="{{ url_for('static',filename='css/index-styles.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static',filename='css/test-styles.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block menu %}
+<li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger text-uppercase" href="#about">Logowanie</a></li>
+<li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger text-uppercase" href="#contact">Kontakt</a></li>
+{% endblock %}
+
+{% block content %}
+<section class="container mb-5">
+	<!-- Test title -->
+	<div class="test_title">
+		<h1>{{ test_params.title }}</h1>
+		<h2>{{ test_params.author }}</h2>
+	</div>
+
+	<!-- Question list -->
+	<ul class="pagination d-flex">
+		{% for i in range(test_params.number_of_questions) %}
+				<li class="page-item flex-fill {{ 'active' if i == question.index - 1}}">
+					<a class="page-link text-center" href="/test/{{ i + 1}}">{{ i + 1 }}</a>
+				</li>
+		{% endfor %}
+		<li class="page-item flex-fill"><a class="page-link text-center" href="#">Podsumowanie</a></li>
+	</ul>
+
+	<!-- Question score -->
+	<div class="row">
+		<h3 class="col-sm-6">Pytanie {{ question.index }}</h3>
+		<h3 class="col-sm-6 text-right">Punkty: {{ question.points }}</h3>
+	</div>
+
+	<!-- Question content -->
+	<div class="row">
+		<!-- Question part -->
+
+		<div class="{{ 'col-sm-8' if question.images else 'col' }}">
+			<p>{{ question.content }}</p>
+			<form onsubmit="return false;">
+				{% if question.type == 0 or question.type == 1 %}
+					{% for anwser in question.anwsers %}
+						<div class="form-check">
+							<label class="form-check-label">
+								<input type="{{ 'checkbox' if question.type == 0 else 'radio' }}" class="form-check-input" name="anwser" value="{{ anwser }}"> {{ anwser }}
+							</label>
+						</div>
+					{% endfor %}
+				{% else %}
+					<div class="form-group">
+						<textarea class="form-control" rows="5" name="anwser"></textarea>
+					</div>
+				{% endif %}
+			</form>
+		</div>
+
+		<!-- Image part -->
+		{% if question.images %}
+		<div class="col-sm-4">
+			<div id="images" class="carousel slide" data-interval="false">
+				<!-- Indicators -->
+				<ul class="carousel-indicators">
+					{% for image in question.images %}
+						<li data-target="#images" data-slide-to="{{ loop.index - 1 }}" {{ 'class=active' if loop.index == 1 }}></li>
+					{% endfor %}
+				</ul>
+
+				<div class="carousel-inner">
+				{% for image in question.images %}
+					<div class="carousel-item {{ 'active' if loop.index == 1 }}">
+						<img class="img-fluid" src="{{ url_for('static',filename=('images/test_images/' + image)) }}" alt="??">
+					</div>
+				{% endfor %}
+			  </div>
+			   <!-- Left and right controls -->
+				<a class="carousel-control-prev" href="#images" data-slide="prev">
+					<span class="carousel-control-prev-icon"></span>
+				</a>
+				<a class="carousel-control-next" href="#images" data-slide="next">
+					<span class="carousel-control-next-icon"></span>
+				</a>
+			</div>
+		</div>
+		{% endif %}
+	</div>
+</section>
+
+<!-- Bottom controls -->
+<section class="container bg-light border py-2 mb-5">
+	<div class="row">
+		<div class="col-sm-4 text-left">javascript time</div>
+		<div class="col-sm-4 text-center"> 
+			<div class="btn-group">
+				<a class="btn btn-primary {{ 'disabled' if question.index == 1 }}" href="/test/{{ question.index - 1 }}">Poprzednie</a>
+				<a class="btn btn-dark disabled">{{ question.index }} / {{ test_params.number_of_questions }}</a	>
+				<a class="btn btn-primary {{ 'disabled' if question.index == test_params.number_of_questions }}" href="/test/{{ question.index + 1 }}">Następne</a>
+			</div>
+			
+		</div>
+		<div class="col-sm-4 text-right">
+			<a class="btn btn-primary" href="#">Zakończ</a>
+			<a class="btn btn-primary" href="#">help</a>
+		</div>
+	</div>
+</section>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

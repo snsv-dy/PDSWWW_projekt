@@ -1,0 +1,150 @@
+{% extends "standard.html" %}
+
+{% block styles %}
+    {{ super() }}
+    <link href="{{ url_for('static',filename='css/index-styles.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static',filename='css/test-styles.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block menu %}
+<li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger text-uppercase" href="#about">Logowanie</a></li>
+<li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger text-uppercase" href="#contact">Kontakt</a></li>
+{% endblock %}
+
+{% block content %}
+<section class="container my-5 border">
+	<!-- Test title -->
+	<div class="row my-3 test_title">
+		<div class="col-sm-12">
+			<form class="d-flex flex-row" action="/test_edit/title" method="post">
+				<input class="form-control mr-2" style="width: 300px" type="text" name="test_title" placeholder="Tytuł testu" value="{{ test_params.title }}">
+				<!-- <input class="btn btn-primary " type="submit" value="Zapisz tytuł"> -->
+				<h3>Autor: {{ test_params.author }}</h3>
+			</form>
+		</div>
+	</div>
+
+	<!-- Question list -->
+	<div class="row">
+		<div class="col-md-12 d-flex flex-row">
+			<ul class="pagination flex-fill">
+				{% for i in range(test_params.number_of_questions) %}
+						<li class="page-item flex-fill {{ 'active' if i == question.index - 1}}">
+							<a class="page-link" href="/test_edit/{{ i + 1}}">{{ i + 1 }} <button class="close" onclick="return false;">&times;</button></a>
+						</li>
+				{% endfor %}
+				<li class="page-item flex-fill">
+					<div class="dropdown">
+						<a class="page-link text-center" href="#" data-toggle="dropdown">Dodaj pytanie</a>
+						<div class="dropdown-menu">
+							<a class="dropdown-item" href="#">Wielokrotny wybór</a>
+							<a class="dropdown-item" href="#">Jednokrotny wybór</a>
+							<a class="dropdown-item" href="#">Otwarta odpowiedź</a>
+						</div>
+					</div>
+				</li>
+			</ul>
+			<a class="btn btn-primary align-self-baseline mx-3" href="#">Zapisz</a>
+		</div>
+	</div>
+
+	<!-- Question score -->
+	<div class="row">
+		<h3 class="col-sm-6">Pytanie {{ question.index }}</h3>
+		<div class="col-sm-6 d-flex">
+			<h3 class="text-right">Punkty:</h3>
+			<input class="form-control inline" type="text" name="points" value="{{ question.points }}" >
+		</div>
+	</div>
+
+	<!-- Question content -->
+	<div class="row">
+		<!-- Question part -->
+
+		<div class="col-sm-8 pb-3">
+			<textarea class="form-control my-3" rows="4" placeholder="Treść pytania">{{ question.content }}</textarea>
+			<form onsubmit="return false;">
+				{% if question.type == 0 or question.type == 1 %}
+					{% for anwser in question.anwsers %}
+						<!-- <div class="form-check"> -->
+								<div class="input-group mb-3">
+									<div class="input-group-prepend">
+									  <div class="input-group-text">
+										<input type="{{ 'checkbox' if question.type == 0 else 'radio' }}" name="anwser" value="{{ anwser }}"> 
+									  </div>
+									</div>
+									<input type="text" class="form-control" placeholder="Odpowiedź" value="{{ anwser }}">
+								  </div>
+						<!-- </div> -->
+					{% endfor %}
+					<button class="btn btn-primary">Dodaj odpowiedź</button>
+				{% endif %}
+			</form>
+		</div>
+
+		<!-- Image part -->
+		<div class="col-sm-4">
+			<div id="images" class="carousel slide" data-interval="false">
+				<!-- Indicators -->
+				<ul class="carousel-indicators">
+					{% if question.images %}
+						{% for image in question.images %}
+							<li data-target="#images" data-slide-to="{{ loop.index - 1 }}" {{ 'class=active' if loop.index == 1 }}></li>
+						{% endfor %}
+					{% else %}
+						<div class="carousel-item">
+							<li data-target="#images" data-slide-to="0" class="active"></li>
+						</div>
+					{% endif %}
+					
+				</ul>
+
+				<div class="carousel-inner">
+				{% if question.images %}
+					{% for image in question.images %}
+						<div class="carousel-item text-right {{ 'active' if loop.index == 1 }}">
+							<button class="btn btn-danger">Usuń obraz</button>
+							<img class="img-fluid" src="{{ url_for('static',filename=('images/test_images/' + image)) }}" alt="{{ image }}">
+						</div>
+					{% endfor %}
+				{% else %}
+					<div class="carousel-item active">
+						<img class="img-fluid" src="{{ url_for('static',filename=('images/test_images/placeholder.png')) }}" alt="No images">
+					</div>
+				{% endif %}
+			  </div>
+			   <!-- Left and right controls -->
+				<a class="carousel-control-prev" href="#images" data-slide="prev">
+					<span class="carousel-control-prev-icon"></span>
+				</a>
+				<a class="carousel-control-next" href="#images" data-slide="next">
+					<span class="carousel-control-next-icon"></span>
+				</a>
+			</div>
+			<a class="btn btn-primary" href="#">Dodaj obraz</a>
+		</div>
+	</div>
+</section>
+
+<!-- Bottom controls -->
+<section class="container bg-light border py-2 mb-5">
+	<div class="row">
+		<div class="col-sm-4 text-left">javascript time</div>
+		<div class="col-sm-4 text-center"> 
+			<div class="btn-group">
+				<a class="btn btn-primary {{ 'disabled' if question.index == 1 }}" href="/test_edit/{{ question.index - 1 }}">Poprzednie</a>
+				<a class="btn btn-dark disabled">{{ question.index }} / {{ test_params.number_of_questions }}</a	>
+				<a class="btn btn-primary {{ 'disabled' if question.index == test_params.number_of_questions }}" href="/test_edit/{{ question.index + 1 }}">Następne</a>
+			</div>
+			
+		</div>
+		<div class="col-sm-4 text-right">
+			<a class="btn btn-primary" href="#">Zakończ</a>
+			<a class="btn btn-primary" href="#">help</a>
+		</div>
+	</div>
+</section>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

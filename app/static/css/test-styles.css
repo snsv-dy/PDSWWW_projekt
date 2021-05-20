@@ -1,0 +1,9 @@
+
+.test_title > h1, h2{
+	/* color: red; */
+	display: inline-block;
+}
+
+.test_title > h1{
+	margin-right: 10px;
+}
