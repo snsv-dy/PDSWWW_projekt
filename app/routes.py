@@ -1,7 +1,10 @@
 from flask import render_template, flash
 from app import app, db
 from app.models import User
+from flask_fontawesome import FontAwesome
 
+
+fa = FontAwesome(app)
 
 @app.route('/')
 @app.route('/index')
