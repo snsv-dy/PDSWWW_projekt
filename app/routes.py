@@ -6,13 +6,13 @@ from flask_fontawesome import FontAwesome
 
 fa = FontAwesome(app)
 
+
 @app.route('/')
 @app.route('/index')
 def index():
-    # u = User(username='susan', email='susan@example.com')
-    # db.session.add(u)
-    # db.session.commit()
-    # flash('Example success notification!', 'success')
-    # flash('Example error notification!', 'error')
-    # flash('Example warning notification!', 'warning!')
+    return render_template('index.html')
+
+
+@app.route('/manage')
+def manage():
     return render_template('manage.html')
