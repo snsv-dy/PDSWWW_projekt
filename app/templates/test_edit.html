@@ -132,9 +132,9 @@
 		<div class="col-sm-4 text-left">javascript time</div>
 		<div class="col-sm-4 text-center"> 
 			<div class="btn-group">
-				<a class="btn btn-primary {{ 'disabled' if question.index == 1 }}" href="/test/{{ question.index - 1 }}">Poprzednie</a>
+				<a class="btn btn-primary {{ 'disabled' if question.index == 1 }}" href="/test_edit/{{ question.index - 1 }}">Poprzednie</a>
 				<a class="btn btn-dark disabled">{{ question.index }} / {{ test_params.number_of_questions }}</a	>
-				<a class="btn btn-primary {{ 'disabled' if question.index == test_params.number_of_questions }}" href="/test/{{ question.index + 1 }}">Następne</a>
+				<a class="btn btn-primary {{ 'disabled' if question.index == test_params.number_of_questions }}" href="/test_edit/{{ question.index + 1 }}">Następne</a>
 			</div>
 			
 		</div>
