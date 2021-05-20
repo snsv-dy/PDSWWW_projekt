@@ -1,0 +1,17 @@
+#register-message {
+    color: white;
+}
+
+#register-message a {
+    color: white;
+}
+
+#login-section {
+    margin-top: 50px;
+    margin-bottom: 100px;
+}
+
+#submit {
+    margin-top: 20px;
+    background-color: lightblue;
+}
