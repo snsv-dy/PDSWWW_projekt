@@ -57,3 +57,7 @@ def quiz(index=1):
 	question = questions[index]
 
 	return render_template('test.html', test_params=sample_test, question=question)
+
+@app.route('/test_summary')
+def test_summary():
+    return render_template('test_summary.html')

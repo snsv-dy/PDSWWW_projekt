@@ -1,0 +1,26 @@
+{% extends "basic.html" %}
+
+{% block styles %}
+    {{ super() }}
+    <link href="{{ url_for('static',filename='css/before-test-styles.css') }}" rel="stylesheet">
+{% endblock %}
+
+
+{% block content %}
+<section class="page-section">
+    <div class="before-test center-block text-center">
+        <h1 class="masthead-heading text-uppercase mb-0">Test z przyrody</h1>
+        <h4 class="masthead-subheading mb-0 text-muted">Podsumowanie</h4>
+        <div class="divider-custom">
+            <div class="divider-custom-line"></div>
+            <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
+            <div class="divider-custom-line"></div>
+        </div>
+        <h1 class="display-5">Twój wynik:</h1>
+        <h1 class="display-1">7/10</h1>
+        <h2 class="masthead-subheading text-success">Ocena: 3.5</h2>
+        <p class="text-center text-danger">Uwaga! Jeżeli w teście były pytania otwarte, ocena może ulec zmianie.</p>
+        <button class="btn btn-primary btn-lg"><i class="fas fa-times-circle"></i> Zamknij podgląd</button>
+    </div>
+</section>
+{% endblock %}
