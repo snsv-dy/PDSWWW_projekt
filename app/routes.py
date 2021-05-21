@@ -4,6 +4,7 @@ from app import app, db
 from app.forms import LoginForm, RegistrationForm
 from app.sample_data import sample_test, sample_anwsers
 from app.models import Teacher
+from app.util import display_form_errors
 
 
 @app.route('/')
@@ -47,6 +48,7 @@ def register():
         db.session.commit()
         flash('Zostałeś pomyślnie zarejestrowany!', 'success')
         return redirect(url_for('index'))
+    display_form_errors(form)
     return render_template('register.html', form=form)
 
 
