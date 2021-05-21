@@ -1,7 +1,8 @@
-from flask import render_template, flash
-from app import app
+from flask import render_template, flash, redirect, url_for
+from app import app, db
 from app.forms import LoginForm, RegistrationForm
 from app.sample_data import sample_test, sample_anwsers
+from app.models import Teacher
 
 
 @app.route('/')
@@ -32,7 +33,11 @@ def login():
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
-        flash('Zarejestrowano pomyślnie!', 'success')
+        teacher = Teacher(email=form.email.data.lower(), password=form.password.data)
+        db.session.add(teacher)
+        db.session.commit()
+        flash('You have successfully registered!', 'success')
+        return redirect(url_for('index'))
     return render_template('register.html', form=form)
 
 
