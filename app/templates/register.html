@@ -6,16 +6,11 @@
     <link href="{{ url_for('static',filename='css/login-styles.css') }}" rel="stylesheet">
 {% endblock %}
 
-{% block menu %}
-<li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger text-uppercase" href="#about">Logowanie</a></li>
-<li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger text-uppercase" href="#contact">Kontakt</a></li>
-{% endblock %}
-
 {% block content %}
 <section class="masthead bg-primary text-white text-center">
     <div class="container d-flex align-items-center flex-column">
         <h1 class="masthead-heading mb-0">Rejestracja</h1>
-        <p id="register-message" class="mt-3">Rejestracja nauczyciela</p>
+        <p id="register-message" class="mt-3">Masz już konto? <a href="{{ url_for('login') }}">Zaloguj się!</a></p>
     </div>
 </section>
 

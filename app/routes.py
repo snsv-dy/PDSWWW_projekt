@@ -1,5 +1,5 @@
 from flask import render_template, flash, redirect, url_for
-from flask_login import login_user
+from flask_login import login_user, logout_user
 from app import app, db
 from app.forms import LoginForm, RegistrationForm
 from app.sample_data import sample_test, sample_anwsers
@@ -50,6 +50,13 @@ def register():
         return redirect(url_for('index'))
     display_form_errors(form)
     return render_template('register.html', form=form)
+
+
+@app.route('/logout')
+def logout():
+    flash('Zostałeś pomyślnie wylogowany', 'success')
+    logout_user()
+    return redirect(url_for('index'))
 
 
 @app.route('/test_review')
