@@ -7,3 +7,10 @@ class LoginForm(FlaskForm):
     password = PasswordField('Hasło')
     remember_me = BooleanField('Zapamiętaj mnie')
     submit = SubmitField('Zaloguj')
+
+
+class RegistrationForm(FlaskForm):
+    email = StringField('Email')
+    password = PasswordField('Hasło')
+    password_confirmation = PasswordField('Powtórzone hasło')
+    submit = SubmitField('Zarejestruj')

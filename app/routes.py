@@ -1,6 +1,6 @@
 from flask import render_template, flash
 from app import app
-from app.forms import LoginForm
+from app.forms import LoginForm, RegistrationForm
 from app.sample_data import sample_test, sample_anwsers
 
 
@@ -26,6 +26,14 @@ def login():
     if form.validate_on_submit():
         flash('Zalogowano pomyślnie!', 'success')
     return render_template('login.html', form=form)
+
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        flash('Zarejestrowano pomyślnie!', 'success')
+    return render_template('register.html', form=form)
 
 
 @app.route('/test_review')
