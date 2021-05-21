@@ -1,4 +1,5 @@
 from flask import render_template, flash, redirect, url_for
+from flask_login import login_user
 from app import app, db
 from app.forms import LoginForm, RegistrationForm
 from app.sample_data import sample_test, sample_anwsers
@@ -25,7 +26,15 @@ def before_test():
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        flash('Zalogowano pomyślnie!', 'success')
+        teacher = Teacher.query.filter_by(email=form.email.data.lower()).first()
+        if teacher is None:
+            flash('Podany email nie jest zarejestrowany', 'error')
+            return render_template('login.html', form=form)
+        if teacher.verify_password(form.password.data):
+            login_user(teacher, remember=form.remember_me.data)
+            flash('Zalogowano pomyślnie!', 'success')
+            return redirect(url_for('index'))
+        flash('Niepoprawne hasło', 'error')
     return render_template('login.html', form=form)
 
 
@@ -36,7 +45,7 @@ def register():
         teacher = Teacher(email=form.email.data.lower(), password=form.password.data)
         db.session.add(teacher)
         db.session.commit()
-        flash('You have successfully registered!', 'success')
+        flash('Zostałeś pomyślnie zarejestrowany!', 'success')
         return redirect(url_for('index'))
     return render_template('register.html', form=form)
 
