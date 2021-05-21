@@ -10,5 +10,6 @@ db = SQLAlchemy(app)
 fa = FontAwesome(app)
 bootstrap = Bootstrap(app)
 
-
 from app import routes, models
+
+db.create_all()
