@@ -6,6 +6,7 @@ email-validator==1.1.2
 Flask==2.0.0
 Flask-Bootstrap==3.3.7.1
 Flask-FontAwesome==0.1.5
+Flask-Login==0.5.0
 Flask-SQLAlchemy==2.5.1
 Flask-WTF==0.14.3
 fontawesome==5.10.1.post1
