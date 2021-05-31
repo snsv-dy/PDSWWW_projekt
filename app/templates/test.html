@@ -6,6 +6,10 @@
     <link href="{{ url_for('static',filename='css/test-styles.css') }}" rel="stylesheet">
 {% endblock %}
 
+{% macro submit_form_to(action) %}
+document.forms['anwser'].action = '{{action}}'; document.forms['anwser'].submit();
+{% endmacro %}
+
 {% block content %}
 <section class="container mb-5">
 	<!-- Test title -->
@@ -18,7 +22,7 @@
 	<ul class="pagination d-flex">
 		{% for i in range(test_params.number_of_questions) %}
 				<li class="page-item flex-fill {{ 'active' if i == question.index - 1}}">
-					<a class="page-link text-center" href="/test/{{ i + 1}}">{{ i + 1 }}</a>
+					<a class="page-link text-center" href="#" onclick="{{ submit_form_to('/test/' ~ (i + 1)) }}">{{ i + 1 }}</a>
 				</li>
 		{% endfor %}
 		<li class="page-item flex-fill"><a class="page-link text-center" href="#">Podsumowanie</a></li>
@@ -36,18 +40,21 @@
 
 		<div class="{{ 'col-sm-8' if question.images else 'col' }}">
 			<p>{{ question.content }}</p>
-			<form onsubmit="return false;">
+			<!-- <form name="anwser" onsubmit="return false;"> -->
+			<form name="anwser" action="/test/1" method="post">
+				<input type="hidden" name="question_type" value="{{ question.type }}">
+				<input type="hidden" name="question_index" value="{{ question.index }}">
 				{% if question.type == 0 or question.type == 1 %}
 					{% for anwser in question.anwsers %}
 						<div class="form-check">
 							<label class="form-check-label">
-								<input type="{{ 'checkbox' if question.type == 0 else 'radio' }}" class="form-check-input" name="anwser" value="{{ anwser }}"> {{ anwser }}
+								<input type="{{ 'checkbox' if question.type == 0 else 'radio' }}" class="form-check-input" name="anwser" value="{{ loop.index }}" {{'checked' if anwsers and ((question.type == 0 and loop.index in anwsers) or (question.type == 1 and loop.index == anwsers)) }}> {{ anwser }}
 							</label>
 						</div>
 					{% endfor %}
 				{% else %}
 					<div class="form-group">
-						<textarea class="form-control" rows="5" name="anwser"></textarea>
+						<textarea class="form-control" rows="5" name="anwser">{{ anwsers if anwsers }}</textarea>
 					</div>
 				{% endif %}
 			</form>
@@ -90,9 +97,11 @@
 		<div class="col-sm-4 text-left">javascript time</div>
 		<div class="col-sm-4 text-center"> 
 			<div class="btn-group">
-				<a class="btn btn-primary {{ 'disabled' if question.index == 1 }}" href="/test/{{ question.index - 1 }}">Poprzednie</a>
+				<!-- <a class="btn btn-primary {{ 'disabled' if question.index == 1 }}" href="/test/{{ question.index - 1 }}">Poprzednie</a> -->
+				<input type="submit" class="btn btn-primary {{ 'disabled' if question.index == 1 }}" value="Poprzednie" onclick="{{ submit_form_to('/test/' ~ (question.index - 1)) }}">
 				<a class="btn btn-dark disabled">{{ question.index }} / {{ test_params.number_of_questions }}</a	>
-				<a class="btn btn-primary {{ 'disabled' if question.index == test_params.number_of_questions }}" href="/test/{{ question.index + 1 }}">Następne</a>
+				<input type="submit" class="btn btn-primary {{ 'disabled' if question.index == test_params.number_of_questions }}" value="Następne" onclick="{{ submit_form_to('/test/' ~ (question.index + 1)) }}">
+				<!-- <a class="btn btn-primary {{ 'disabled' if question.index == test_params.number_of_questions }}" href="/test/{{ question.index + 1 }}">Następne</a> -->
 			</div>
 			
 		</div>
