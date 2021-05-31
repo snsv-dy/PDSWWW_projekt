@@ -63,9 +63,71 @@ def logout():
 def quiz_review():
     return render_template('test_review.html', test_params=sample_anwsers)
 
+sample_test['questions'][0]['anwsers'].append('hehe')
 
-@app.route('/test_edit/<int:number>')
+def update_test_question(form):
+    print(form)
+    question_index = form.get('question_index')
+    index = int(question_index) - 1
+    question_type = form.get('question_type')
+
+    title = form.get('title')
+    points = form.get('points')
+    question_content = form.get('question')
+
+    print('index', index, 'rest', title, points, question_content)
+
+    sample_test['title'] = title
+    question = sample_test['questions'][index]
+    question['points'] = int(points)
+    question['content'] = question_content
+
+    if question_type in ['0', '1']:
+        anwsers = form.getlist('anwser_text')
+        question['anwsers'] = anwsers
+
+
+@app.route('/test_edit/structure/<action>/<param>', methods=['GET', 'POST'])
+def quiz_edit_structure(action, param):
+    print('number_of_questions', sample_test['number_of_questions'])
+    if action == 'add_question' and param in ['0', '1', '2']:
+        questions = sample_test['questions']
+        n_questions = len(questions)
+        question = {
+            'index': n_questions + 1,
+            'type': int(param),
+            'content': '',
+            'points': 1
+        }
+
+        if param in ['0', '1']:
+            question['anwsers'] = []
+
+        sample_test['questions'].append(question)
+        sample_test['number_of_questions'] += 1
+        print(sample_test['questions'])
+        return redirect('/test_edit/' + str(n_questions + 1))
+    elif action == 'remove_question':
+        print('yeee')
+        index = int(param) - 1
+
+        n_questions = sample_test['number_of_questions']
+
+        for i in range(index, n_questions):
+            sample_test['questions'][i]['index'] -= 1
+
+        del sample_test['questions'][index]
+        sample_test['number_of_questions'] -= 1
+        return redirect('/test_edit/' + str(index))
+
+
+
+@app.route('/test_edit/')
+@app.route('/test_edit/<int:number>', methods=['POST', 'GET'])
 def quiz_edit(number=1):
+    if len(request.form) > 0:
+        update_test_question(request.form)
+
     number -= 1
     questions = sample_test['questions']
 
@@ -96,6 +158,7 @@ def update_previous_question(form):
     else:
         question_anwsers[index] = anwser[0]
 
+@app.route('/test/')
 @app.route('/test/<int:number>', methods=['GET', 'POST'])
 def quiz(number=1):
     if len(request.form) > 0:
