@@ -12,10 +12,10 @@ fa = FontAwesome(app)
 bootstrap = Bootstrap(app)
 login = LoginManager(app)
 
-from app import routes, models
+from app import routes, models, db_sample_data
 
 db.create_all()
-models.initialize()
+db_sample_data.initialize()
 
 
 @login.user_loader

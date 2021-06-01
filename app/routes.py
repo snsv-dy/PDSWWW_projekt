@@ -5,18 +5,11 @@ from app.forms import LoginForm, RegistrationForm
 from app.sample_data import sample_test, sample_anwsers
 from app.models import *
 from app.util import display_form_errors
-from flask_login import current_user
 
 
 @app.route('/')
 @app.route('/index')
 def index():
-    # test = Test(title='Test', author='Author')
-    # q1 = Question(question="2+2", points=4, data={'all_option': ['option 1', 'option 2' 'option 3'], 'correct': 1})
-    # test.questions.append(q1)
-    # db.session.add(test)
-    # db.session.commit()
-    print(current_user)
     return render_template('index.html')
 
 
@@ -70,7 +63,10 @@ def logout():
 def quiz_review():
     return render_template('test_review.html', test_params=sample_anwsers)
 
+
 sample_test['questions'][0]['anwsers'].append('hehe')
+question_anwsers = [[1, 3], 2, 'Siema']
+
 
 def update_test_question(form):
     print(form)
@@ -128,7 +124,6 @@ def quiz_edit_structure(action, param):
         return redirect('/test_edit/' + str(index))
 
 
-
 @app.route('/test_edit/')
 @app.route('/test_edit/<int:number>', methods=['POST', 'GET'])
 def quiz_edit(number=1):
@@ -145,10 +140,6 @@ def quiz_edit(number=1):
     return render_template('test_edit.html', test_params=sample_test, question=question)
 
 
-question_anwsers = [
-	[1, 3], 2, 'Siema'
-]
-
 def update_previous_question(form):
     question_type = form.get('question_type')
     question_index = form.get('question_index')
@@ -164,6 +155,7 @@ def update_previous_question(form):
         question_anwsers[index] = int(anwser[0])
     else:
         question_anwsers[index] = anwser[0]
+
 
 @app.route('/test/')
 @app.route('/test/<int:number>', methods=['GET', 'POST'])

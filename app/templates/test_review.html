@@ -9,15 +9,15 @@
 {% block content %}
 <section class="container mb-5">
 	<!-- Test title -->
-	<div class="row border">
+	<div class="row border p-2">
 		<div class="col mt-3">
 			<h3>{{ test_params.title }} | {{ test_params.date }} | {{ test_params.subject }}</h3>
 		</div>
 	</div>
 
-	<div class="row py-2">
+	<div class="row align-items-center py-4">
 		<!-- Navigation -->
-		<div class="col-sm-4">
+		<div class="col-sm-12 col-md-4 text-center">
 			<div class="btn-group">
 				<a class="btn btn-primary" href="#">&LeftArrow;</a>
 				<a class="btn btn-primary disabled" href="#"> 3 / 14</a>
@@ -26,8 +26,8 @@
 		</div>
 
 		<!-- Student info -->
-		<div class="col-sm-4 d-flex justify-content-center">
-			<table class="table-sm ">
+		<div class="col-sm-12 col-md-4 text-center">
+			<table class="table-sm text-left d-inline-block">
 				<tr>
 					<td><b>Email: </b></td>
 					<td>test@gmail.com</td>
@@ -40,50 +40,42 @@
 		</div>
 
 		<!-- Exit button -->
-		<div class="col-sm-4 d-flex justify-content-end">
+		<div class="col-sm-12 col-md-4 text-center">
 			<a class="btn btn-primary align-self-baseline" href="#">Zakończ sprawdzanie</a>
 		</div>
+
 	</div>
 
 	<!-- Anwsers -->
-	<div class="row border py-2">
-		<div class="col-sm-12">
-			<h3>Odpowiedzi zdającego</h3>
-		</div>
-		<div class="col-sm-12">
-			<table class="table">
-				<tr>
-					<th>Nr</th>
-					<th>Odpowiedź zdającego</th>
-					<th>Przyznane punkty</th>
-				</tr>
-				{% for anwser in test_params.anwsers %}
-					<tr>
-						<td>{{ anwser.index }}</td>
-						<td>
-							<p class="m-0">Pytanie: {{ anwser.question }}</p>
-							<p class="m-0">Odpowiedź: <b>{{ anwser.anwser }}</b></p>
-						</td>
-						<td class=" w-25">
-							<div class="input-group">
-								<input type="text" class="form-control" placeholder="Liczba punktów">
-								<div class="input-group-append">
-								  <span class="input-group-text"> / {{ anwser.points }}</span>
-								</div>
-							  </div>
-						</td>
-					</tr>
-				{% endfor %}
-			</table>
-		</div>
-	</div>
+	<ol class="list-group list-group-numbered">
+		<li class="row list-group-item d-flex justify-content-between align-items-start">
+			<div class="col-8"><h4>Pytania i odpowiedźi</h4></div>
+			<div class="col-4"><h4>Punktacja</h4></div>
+	  	</li>
+		{% for anwser in test_params.anwsers %}
+		<li class="row align-items-center list-group-item d-flex justify-content-between align-items-start">
+			<div class="col-sm-12 col-md-8">
+				<p>{{ anwser.index }}. {{ anwser.question }}</p>
+				<p>Odpowiedź: {{ anwser.anwser }}</p>
+			</div>
+			<div class="col-sm-12 col-md-4">
+				<div class="input-group">
+					<input type="text" class="form-control" placeholder="Liczba punktów">
+					<div class="input-group-append">
+					  <span class="input-group-text"> / {{ anwser.points }}</span>
+					</div>
+				</div>
+			</div>
+	  	</li>
+		{% endfor %}
+	</ol>
 
 	<!-- Grade -->
-	<div class="row mt-2 justify-content-center">
-		<div class="col-sm-1 text-right">
-			<span class="mr-2 align-middle">Ocena</span>
+	<div class="row mt-3 justify-content-center align-items-center">
+		<div class="col-12 col-md-1">
+			<span class="">Ocena</span>
 		</div>
-		<div class="col-sm-2">
+		<div class="col-12 col-md-4">
 			<div class="input-group">
 				<input type="text" class="form-control" placeholder="Liczba punktów" value="{{ test_params.grade }}">
 				<div class="input-group-append">
