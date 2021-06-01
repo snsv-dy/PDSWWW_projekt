@@ -15,6 +15,7 @@ login = LoginManager(app)
 from app import routes, models
 
 db.create_all()
+models.initialize()
 
 
 @login.user_loader
