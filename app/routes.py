@@ -3,13 +3,20 @@ from flask_login import login_user, logout_user
 from app import app, db
 from app.forms import LoginForm, RegistrationForm
 from app.sample_data import sample_test, sample_anwsers
-from app.models import Teacher
+from app.models import *
 from app.util import display_form_errors
+from flask_login import current_user
 
 
 @app.route('/')
 @app.route('/index')
 def index():
+    # test = Test(title='Test', author='Author')
+    # q1 = Question(question="2+2", points=4, data={'all_option': ['option 1', 'option 2' 'option 3'], 'correct': 1})
+    # test.questions.append(q1)
+    # db.session.add(test)
+    # db.session.commit()
+    print(current_user)
     return render_template('index.html')
 
 

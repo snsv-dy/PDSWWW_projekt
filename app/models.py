@@ -7,6 +7,8 @@ class Teacher(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(128))
+    full_name = db.Column(db.String)
+    tests = db.relationship("Test", backref="teacher", lazy='select')
 
     @property
     def password(self):
@@ -19,3 +21,36 @@ class Teacher(db.Model, UserMixin):
     def verify_password(self, password):
         return check_password_hash(self.password_hash, password)
 
+
+class Question(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    question = db.Column(db.String)
+    points = db.Column(db.Float)
+    image = db.Column(db.PickleType)
+    testid = db.Column(db.Integer, db.ForeignKey('test.id'))
+    type = db.Column(db.Integer)
+    data = db.Column(db.PickleType)
+
+
+class Test(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    questions = db.relationship("Question", backref="test", lazy='select')
+    title = db.Column(db.String)
+    teacherid = db.Column(db.Integer, db.ForeignKey('teacher.id'))
+    terms = db.relationship("TestTerm", backref="test", lazy='select')
+
+
+class TestTerm(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    time = db.Column(db.DateTime)
+    code = db.Column(db.Integer)
+    testid = db.Column(db.Integer, db.ForeignKey('test.id'))
+    answers = db.relationship("TestAnswer", backref="test_term", lazy='select')
+
+
+class TestAnswer(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String)
+    full_name = db.Column(db.String)
+    test_term_id = db.Column(db.Integer, db.ForeignKey('test_term.id'))
+    answers = db.Column(db.PickleType)
