@@ -65,11 +65,11 @@ def quiz_review(term_id, answer_nr):
     term = TestTerm.query.filter_by(id=term_id).first()
 
     if term is None:
-        flash('Invalid test term', 'error')
+        flash('Nieprawidłowy termin testu', 'error')
         return redirect(url_for('index'))
 
     if answer_nr > len(term.answers) or answer_nr <= 0:
-        flash('There is not tests to review', 'success')
+        flash('Nie ma takiej pracy do sprawdzenia', 'error')
         return redirect(url_for('index'))
 
     answer = term.answers[answer_nr-1]
@@ -81,11 +81,11 @@ def quiz_review_post(term_id, answer_nr):
     term = TestTerm.query.filter_by(id=term_id).first()
 
     if term is None:
-        flash('Invalid test term', 'error')
+        flash('Nieprawidłowy termin testu', 'error')
         return redirect(url_for('index'))
 
     if answer_nr > len(term.answers) or answer_nr <= 0:
-        flash('There is not tests to review', 'success')
+        flash('Nie ma takiej pracy do sprawdzenia', 'error')
         return redirect(url_for('index'))
 
     answer = term.answers[answer_nr - 1]
@@ -121,10 +121,21 @@ def quiz_review_post(term_id, answer_nr):
     scored_points = sum(points.values())
     max_points = sum([answer.question.points for answer in answer.answers])
 
-    send_email('social.insight.noreply@gmail.com', 'Wyniki', 'test_result', grade=4, points=points, answer=answer,
+    send_email('social.insight.noreply@gmail.com', 'Wyniki', 'test_result', grade=grade, points=points, answer=answer,
                scored_points=scored_points, max_points=max_points)
 
-    return redirect(url_for('index'))
+    db.session.delete(answer)
+    db.session.commit()
+
+    next_answer_nr = answer_nr
+    if next_answer_nr > len(term.answers):
+        next_answer_nr -= 1
+
+    if next_answer_nr == 0:
+        flash('Wszystkie testy w tym terminie zostały już sprawdzone', 'success')
+        return redirect(url_for('index'))
+
+    return redirect(url_for('quiz_review', term_id=term_id, answer_nr=next_answer_nr))
 
 
 sample_test['questions'][0]['anwsers'].append('hehe')

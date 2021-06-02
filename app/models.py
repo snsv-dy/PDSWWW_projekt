@@ -60,7 +60,7 @@ class TestAnswer(db.Model):
     email = db.Column(db.String)
     full_name = db.Column(db.String)
     test_term_id = db.Column(db.Integer, db.ForeignKey('test_term.id'))
-    answers = db.relationship("QuestionAnswer", backref="test_answer", lazy='select')
+    answers = db.relationship("QuestionAnswer", backref="test_answer", lazy='select', cascade='all,delete')
 
 
 class QuestionAnswer(db.Model):
