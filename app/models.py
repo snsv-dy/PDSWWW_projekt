@@ -36,11 +36,12 @@ class Question(db.Model):
     testid = db.Column(db.Integer, db.ForeignKey('test.id'))
     type = db.Column(db.Integer)
     data = db.Column(db.PickleType)
+    answers = db.relationship("QuestionAnswer", backref="question", lazy='select')
 
 
 class Test(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    questions = db.relationship("Question", backref="test", lazy='select')
+    questions = db.relationship("Question", backref="test", lazy='select', order_by='Question.nr')
     title = db.Column(db.String)
     teacherid = db.Column(db.Integer, db.ForeignKey('teacher.id'))
     terms = db.relationship("TestTerm", backref="test", lazy='select')
@@ -59,4 +60,11 @@ class TestAnswer(db.Model):
     email = db.Column(db.String)
     full_name = db.Column(db.String)
     test_term_id = db.Column(db.Integer, db.ForeignKey('test_term.id'))
-    answers = db.Column(db.PickleType)
+    answers = db.relationship("QuestionAnswer", backref="test_answer", lazy='select')
+
+
+class QuestionAnswer(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    data = db.Column(db.PickleType)
+    test_answer_id = db.Column(db.Integer, db.ForeignKey('test_answer.id'))
+    question_id = db.Column(db.Integer, db.ForeignKey('question.id'))
