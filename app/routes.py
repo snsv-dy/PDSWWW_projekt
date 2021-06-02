@@ -1,4 +1,4 @@
-from flask import render_template, flash, redirect, url_for, request
+from flask import render_template, flash, redirect, url_for, request, session
 from flask_login import login_user, logout_user
 from app import app, db
 from app.forms import LoginForm, RegistrationForm
@@ -59,9 +59,47 @@ def logout():
     return redirect(url_for('index'))
 
 
-@app.route('/test_review')
-def quiz_review():
-    return render_template('test_review.html', test_params=sample_anwsers)
+@app.route('/test_review/<int:term_id>/<int:answer_nr>')
+def quiz_review(term_id, answer_nr):
+    term = TestTerm.query.filter_by(id=term_id).first()
+
+    if term is None:
+        flash('Invalid test term', 'error')
+        return redirect(url_for('index'))
+
+    if answer_nr > len(term.answers) or answer_nr <= 0:
+        flash('There is not tests to review', 'success')
+        return redirect(url_for('index'))
+
+    answer = term.answers[answer_nr-1]
+    return render_template('test_review.html', answer=answer, answer_nr=answer_nr, term_id=term_id)
+
+
+@app.route('/test_review/<answer_id>', methods=['POST'])
+def quiz_review_post(answer_id):
+    answer = TestAnswer.query.filter_by(id=answer_id).first()
+
+    valid = True
+
+    form = request.form
+    try:
+        for field in form.keys():
+            if field == 'grade':
+                if 1 < float(form['grade']) > 5:
+                    valid = False
+                    break
+            else:
+                question_nr = int(field)
+                max_points = answer.answers[question_nr-1].question.points
+                provided_points = float(form[field])
+                if provided_points > max_points:
+                    valid = False
+                    break
+    except ValueError:
+        valid = False
+
+    flash('Niepoprawne dane ' + str(valid), 'error')
+    return redirect(url_for('quiz_review', answer_id=answer_id))
 
 
 sample_test['questions'][0]['anwsers'].append('hehe')

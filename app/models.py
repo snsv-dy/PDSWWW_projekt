@@ -52,7 +52,7 @@ class TestTerm(db.Model):
     time = db.Column(db.DateTime)
     code = db.Column(db.Integer)
     testid = db.Column(db.Integer, db.ForeignKey('test.id'))
-    answers = db.relationship("TestAnswer", backref="test_term", lazy='select')
+    answers = db.relationship("TestAnswer", backref="term", lazy='select')
 
 
 class TestAnswer(db.Model):

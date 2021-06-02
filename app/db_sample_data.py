@@ -26,15 +26,15 @@ def add_test(teacher):
     teacher.tests.append(test)
     db.session.add(test)
 
-    q1 = Question(question='Z jakich części składa się cep?', points=4, image=None, type=Question.MULTIPLE_CHOICE, data={'all': ['Długi kij', 'Krótki kijek' 'Kawałek sznurka', 'Skrzynia biegów', 'Sprężarka', 'Spust', 'hehe'], 'correct': [0, 1, 2]})
+    q1 = Question(nr=1, question='Z jakich części składa się cep?', points=4, image=None, type=Question.MULTIPLE_CHOICE, data={'all': ['Długi kij', 'Krótki kijek' 'Kawałek sznurka', 'Skrzynia biegów', 'Sprężarka', 'Spust', 'hehe'], 'correct': [0, 1, 2]})
     test.questions.append(q1)
     db.session.add(q1)
 
-    q2 = Question(question='Co jest cięższe?', points=4, image=None, type=Question.SINGLE_CHOICE, data={'all': ['1kg piór', '1kg stali'], 'correct': 0})
+    q2 = Question(nr=2, question='Co jest cięższe?', points=4, image=None, type=Question.SINGLE_CHOICE, data={'all': ['1kg piór', '1kg stali'], 'correct': 0})
     test.questions.append(q2)
     db.session.add(q2)
 
-    q3 = Question(question='To po prawo to tak naprawdę nie jest zdjęcie jowisza, tylko staw z kaczkami', points=6, image=None, type=Question.OPEN)
+    q3 = Question(nr=3, question='To po prawo to tak naprawdę nie jest zdjęcie jowisza, tylko staw z kaczkami', points=6, image=None, type=Question.OPEN)
     test.questions.append(q3)
     db.session.add(q3)
 
@@ -56,19 +56,19 @@ def add_answers(term):
     term.answers.append(test_answer)
     db.session.add(test_answer)
 
-    a1 = QuestionAnswer(data=0)
+    a1 = QuestionAnswer(data=[0, 5])
     q = term.test.questions[0]
     q.answers.append(a1)
     test_answer.answers.append(a1)
     db.session.add(a1)
 
-    a2 = QuestionAnswer(data=0)
+    a2 = QuestionAnswer(data=1)
     q = term.test.questions[1]
     q.answers.append(a2)
     test_answer.answers.append(a2)
     db.session.add(a2)
 
-    a3 = QuestionAnswer(data=0)
+    a3 = QuestionAnswer(data='Nie wiem')
     q = term.test.questions[2]
     q.answers.append(a3)
     test_answer.answers.append(a3)
