@@ -5,11 +5,13 @@ from app.forms import LoginForm, RegistrationForm
 from app.sample_data import sample_test, sample_anwsers
 from app.models import *
 from app.util import display_form_errors
+from app.email import send_email
 
 
 @app.route('/')
 @app.route('/index')
 def index():
+    send_email('ukasz.klimkiewicz@gmail.com', 'Subject', 'test', name='Lukasz')
     return render_template('index.html')
 
 
