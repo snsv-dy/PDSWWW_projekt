@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_fontawesome import FontAwesome
 from flask_bootstrap import Bootstrap
 from flask_login import LoginManager
+from flask_mail import Mail
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -11,6 +12,7 @@ db = SQLAlchemy(app)
 fa = FontAwesome(app)
 bootstrap = Bootstrap(app)
 login = LoginManager(app)
+mail = Mail(app)
 
 from app import routes, models, db_sample_data
 
