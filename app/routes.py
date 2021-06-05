@@ -32,8 +32,6 @@ def index_post():
     return redirect(url_for('before_test', term_id=term.id))
 
 
-
-
 @app.route('/manage')
 def manage():
     return render_template('manage.html')
@@ -41,6 +39,7 @@ def manage():
 
 @app.route('/before_test/<int:term_id>')
 def before_test(term_id):
+    # TODO: Można by na tej stronie dodać pole do podania nazwiska i adresu email (Chyba że na stronie głównej)
     return render_template('before_test.html')
 
 
@@ -55,7 +54,7 @@ def login():
         if teacher.verify_password(form.password.data):
             login_user(teacher, remember=form.remember_me.data)
             flash('Zalogowano pomyślnie!', 'success')
-            return redirect(url_for('index'))
+            return redirect(url_for('manage'))
         flash('Niepoprawne hasło', 'error')
     return render_template('login.html', form=form)
 

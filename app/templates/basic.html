@@ -28,6 +28,7 @@
                     <ul class="navbar-nav ml-auto">
                         {% block menu %} {% endblock %}
                         {% if current_user.is_authenticated %}
+                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger text-uppercase" href="{{ url_for('manage') }}">Zarządzaj testami</a></li>
                         <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger text-uppercase" href="{{ url_for('logout') }}">Wyloguj się</a></li>
                         {% else %}
                         <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger text-uppercase" href="{{ url_for('login') }}">Logowanie nauczyciela</a></li>

@@ -2,13 +2,21 @@
     font-size: 30pt;
     font-family: monospace;
     text-align: center;
+    display: block;
 }
 
-#next-button {
-    display: inline;
-    height: 60px;
-    width: auto;
-    vertical-align: middle;
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+#confirm-button {
+    width: 100%;
+    height: 40px;
+    vertical-align: center;
+    display: inline-block;
+    margin: 0px;
 }
 
 #student-image, #teacher-image {
