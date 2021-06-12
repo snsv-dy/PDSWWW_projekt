@@ -24,8 +24,8 @@ class Teacher(db.Model, UserMixin):
 
 class Question(db.Model):
 
-    SINGLE_CHOICE = 0
-    MULTIPLE_CHOICE = 1
+    MULTIPLE_CHOICE = 0
+    SINGLE_CHOICE = 1
     OPEN = 2
 
     id = db.Column(db.Integer, primary_key=True)

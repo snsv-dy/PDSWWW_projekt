@@ -41,13 +41,21 @@ function post_all_inputs(destination) {
 	form.appendChild(create_input('question_type', question_type));
 
 	if ('anwser_text' in document.forms[1] && (question_type == '0' || question_type == '1')) {
-		if(typeof document.forms[1].anwser_text[Symbol.iterator] === 'function'){
+		if(typeof document.forms[1].anwser_text[Symbol.iterator] === 'function'){ // Sprawdzanie czy w formularzu znajduje się więcej niż 1 odpowiedź.
 			for (let e of document.forms[1].anwser_text) {
 				form.appendChild(create_input(e.name, e.value));
+			}
+			for (let e of document.forms[1].answer) {
+				if(e.checked)
+					form.appendChild(create_input(e.name, e.value));
 			}
 		}else{
 			var e = document.forms[1].anwser_text;
 			form.appendChild(create_input(e.name, e.value));
+			e = document.forms[1].answer;
+
+			if(e.checked)
+				form.appendChild(create_input(e.name, e.value));
 		}
 	}
 
@@ -66,9 +74,15 @@ function add_anwser(type) {
 	var div_text = document.createElement('div');
 	div_text.className = 'input-group-text';
 
+	var n_questions = 0;
+	if('answer' in document.forms[1]){
+		n_questions = document.forms[1].answer.length;
+	}
+
 	var checkbox = document.createElement('input');
 	checkbox.type = type == '0' ? 'checkbox' : 'radio';
-	checkbox.name = 'anwser';
+	checkbox.name = 'answer';
+	checkbox.value = n_questions.toString();
 	div_text.appendChild(checkbox);
 
 	div_prepend.appendChild(div_text);
