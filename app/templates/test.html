@@ -21,7 +21,7 @@ document.forms['anwser'].action = '{{action}}'; document.forms['anwser'].submit(
 	<!-- Question list -->
 	<ul class="pagination d-flex">
 		{% for i in range(test_params.number_of_questions) %}
-				<li class="page-item flex-fill {{ 'active' if i == question.index - 1}}">
+				<li class="page-item flex-fill {{ 'active' if i == current_index - 1}}">
 					<a class="page-link text-center" href="#" onclick="{{ submit_form_to('/test/' ~ (i + 1)) }}">{{ i + 1 }}</a>
 				</li>
 		{% endfor %}
@@ -30,7 +30,7 @@ document.forms['anwser'].action = '{{action}}'; document.forms['anwser'].submit(
 
 	<!-- Question score -->
 	<div class="row">
-		<h3 class="col-sm-6">Pytanie {{ question.index }}</h3>
+		<h3 class="col-sm-6">Pytanie {{ current_index }}</h3>
 		<h3 class="col-sm-6 text-right">Punkty: {{ question.points }}</h3>
 	</div>
 
@@ -38,14 +38,14 @@ document.forms['anwser'].action = '{{action}}'; document.forms['anwser'].submit(
 	<div class="row">
 		<!-- Question part -->
 
-		<div class="{{ 'col-sm-8' if question.images else 'col' }}">
-			<p>{{ question.content }}</p>
+		<div class="{{ 'col-sm-8' if question.image else 'col' }}">
+			<p>{{ question.question }}</p>
 			<!-- <form name="anwser" onsubmit="return false;"> -->
 			<form name="anwser" action="/test/1" method="post">
 				<input type="hidden" name="question_type" value="{{ question.type }}">
-				<input type="hidden" name="question_index" value="{{ question.index }}">
+				<input type="hidden" name="question_index" value="{{ current_index }}">
 				{% if question.type == 0 or question.type == 1 %}
-					{% for anwser in question.anwsers %}
+					{% for anwser in question.data['all'] %}
 						<div class="form-check">
 							<label class="form-check-label">
 								<input type="{{ 'checkbox' if question.type == 0 else 'radio' }}" class="form-check-input" name="anwser" value="{{ loop.index }}" {{'checked' if anwsers and ((question.type == 0 and loop.index in anwsers) or (question.type == 1 and loop.index == anwsers)) }}> {{ anwser }}
@@ -61,18 +61,18 @@ document.forms['anwser'].action = '{{action}}'; document.forms['anwser'].submit(
 		</div>
 
 		<!-- Image part -->
-		{% if question.images %}
+		{% if question.image %}
 		<div class="col-sm-4">
 			<div id="images" class="carousel slide" data-interval="false">
 				<!-- Indicators -->
 				<ul class="carousel-indicators">
-					{% for image in question.images %}
+					{% for image in question.image %}
 						<li data-target="#images" data-slide-to="{{ loop.index - 1 }}" {{ 'class=active' if loop.index == 1 }}></li>
 					{% endfor %}
 				</ul>
 
 				<div class="carousel-inner">
-				{% for image in question.images %}
+				{% for image in question.image %}
 					<div class="carousel-item {{ 'active' if loop.index == 1 }}">
 						<img class="img-fluid" src="{{ url_for('static',filename=('images/test_images/' + image)) }}" alt="??">
 					</div>
@@ -97,11 +97,11 @@ document.forms['anwser'].action = '{{action}}'; document.forms['anwser'].submit(
 		<div class="col-sm-4 text-left">javascript time</div>
 		<div class="col-sm-4 text-center"> 
 			<div class="btn-group">
-				<!-- <a class="btn btn-primary {{ 'disabled' if question.index == 1 }}" href="/test/{{ question.index - 1 }}">Poprzednie</a> -->
-				<input type="submit" class="btn btn-primary {{ 'disabled' if question.index == 1 }}" value="Poprzednie" onclick="{{ submit_form_to('/test/' ~ (question.index - 1)) }}">
-				<a class="btn btn-dark disabled">{{ question.index }} / {{ test_params.number_of_questions }}</a	>
-				<input type="submit" class="btn btn-primary {{ 'disabled' if question.index == test_params.number_of_questions }}" value="Następne" onclick="{{ submit_form_to('/test/' ~ (question.index + 1)) }}">
-				<!-- <a class="btn btn-primary {{ 'disabled' if question.index == test_params.number_of_questions }}" href="/test/{{ question.index + 1 }}">Następne</a> -->
+				<!-- <a class="btn btn-primary {{ 'disabled' if current_index == 1 }}" href="/test/{{ current_index - 1 }}">Poprzednie</a> -->
+				<input type="submit" class="btn btn-primary {{ 'disabled' if current_index == 1 }}" value="Poprzednie" onclick="{{ submit_form_to('/test/' ~ (current_index - 1)) }}">
+				<a class="btn btn-dark disabled">{{ current_index }} / {{ test_params.number_of_questions }}</a	>
+				<input type="submit" class="btn btn-primary {{ 'disabled' if current_index == test_params.number_of_questions }}" value="Następne" onclick="{{ submit_form_to('/test/' ~ (current_index + 1)) }}">
+				<!-- <a class="btn btn-primary {{ 'disabled' if current_index == test_params.number_of_questions }}" href="/test/{{ current_index + 1 }}">Następne</a> -->
 			</div>
 			
 		</div>
