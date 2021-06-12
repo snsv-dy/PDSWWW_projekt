@@ -33,6 +33,7 @@ def index_post():
 
 
 @app.route('/manage')
+@login_required
 def manage():
     return render_template('manage.html')
 
