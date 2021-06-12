@@ -1,5 +1,5 @@
 from flask import render_template, flash, redirect, url_for, request, session
-from flask_login import login_user, logout_user
+from flask_login import login_user, logout_user, login_required
 from app import app, db
 from app.forms import LoginForm, RegistrationForm
 from app.sample_data import sample_test, sample_anwsers
@@ -79,7 +79,8 @@ def logout():
     return redirect(url_for('index'))
 
 
-@app.route('/test_review/<int:term_id>/<int:answer_nr>')
+@app.route('/review/<int:term_id>/<int:answer_nr>')
+@login_required
 def quiz_review(term_id, answer_nr):
     term = TestTerm.query.filter_by(id=term_id).first()
 
@@ -95,7 +96,8 @@ def quiz_review(term_id, answer_nr):
     return render_template('test_review.html', answer=answer, answer_nr=answer_nr, term_id=term_id)
 
 
-@app.route('/test_review/<int:term_id>/<int:answer_nr>', methods=['POST'])
+@app.route('/review/<int:term_id>/<int:answer_nr>', methods=['POST'])
+@login_required
 def quiz_review_post(term_id, answer_nr):
     term = TestTerm.query.filter_by(id=term_id).first()
 
@@ -183,7 +185,7 @@ def update_test_question(form):
         question['anwsers'] = anwsers
 
 
-@app.route('/test_edit/structure/<action>/<param>', methods=['GET', 'POST'])
+@app.route('/edit/structure/<action>/<param>', methods=['GET', 'POST'])
 def quiz_edit_structure(action, param):
     print('number_of_questions', sample_test['number_of_questions'])
     if action == 'add_question' and param in ['0', '1', '2']:
@@ -217,8 +219,9 @@ def quiz_edit_structure(action, param):
         return redirect('/test_edit/' + str(index))
 
 
-@app.route('/test_edit/')
-@app.route('/test_edit/<int:number>', methods=['POST', 'GET'])
+@app.route('/edit/')
+@app.route('/edit/<int:number>', methods=['POST', 'GET'])
+@login_required
 def quiz_edit(number=1):
     if len(request.form) > 0:
         update_test_question(request.form)

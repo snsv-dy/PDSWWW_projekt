@@ -14,6 +14,10 @@ bootstrap = Bootstrap(app)
 login = LoginManager(app)
 mail = Mail(app)
 
+login.login_view = 'login'
+login.login_message = 'Aby przejść na tą stronę musisz się najpierw zalogować jako nauczyciel'
+login.login_message_category = 'warning'
+
 from app import routes, models, db_sample_data
 
 db.create_all()
