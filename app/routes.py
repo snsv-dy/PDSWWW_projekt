@@ -55,7 +55,12 @@ def login():
         if teacher.verify_password(form.password.data):
             login_user(teacher, remember=form.remember_me.data)
             flash('Zalogowano pomyślnie!', 'success')
-            return redirect(url_for('manage'))
+
+            next = request.args.get('next')
+            if next is None or not next.startswith('/'):
+                next = url_for('manage')
+            return redirect(next)
+
         flash('Niepoprawne hasło', 'error')
     return render_template('login.html', form=form)
 
