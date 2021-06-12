@@ -136,7 +136,7 @@ def quiz_review_post(term_id, answer_nr):
         valid = False
 
     if not valid:
-        flash('Niepoprawne dane ' + str(valid), 'error')
+        flash('Niepoprawne dane', 'error')
         return redirect(url_for('quiz_review', term_id=term_id, answer_nr=answer_nr))
 
     scored_points = sum(points.values())
@@ -154,7 +154,7 @@ def quiz_review_post(term_id, answer_nr):
 
     if next_answer_nr == 0:
         flash('Wszystkie testy w tym terminie zostały już sprawdzone', 'success')
-        return redirect(url_for('index'))
+        return redirect(url_for('manage'))
 
     return redirect(url_for('quiz_review', term_id=term_id, answer_nr=next_answer_nr))
 
