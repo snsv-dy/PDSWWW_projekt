@@ -93,7 +93,36 @@ def quiz_review(term_id, answer_nr):
         return redirect(url_for('index'))
 
     answer = term.answers[answer_nr-1]
-    return render_template('test_review.html', answer=answer, answer_nr=answer_nr, term_id=term_id)
+    return render_template('test_review.html', answer=answer, answer_nr=answer_nr, term_id=term_id, calc_points=calc_points)
+
+
+def calc_points(question_answer):
+    qa = question_answer
+
+    if qa.question.type == Question.SINGLE_CHOICE:
+        correct = qa.question.data['correct']
+        provided = qa.data
+        return qa.question.points if provided == correct else 0
+
+    if qa.question.type == Question.MULTIPLE_CHOICE:
+        correct = qa.question.data['correct']
+        provided = qa.data
+
+        points_per_option = qa.question.points / len(correct)
+        print(correct, provided)
+        points = 0
+        for option in provided:
+            if option in correct:
+                points += points_per_option
+            else:
+                points -= points_per_option
+
+        points = max(points, 0)
+        points = round(points * 2) / 2
+        return points
+
+    if qa.question.type == Question.OPEN:
+        return 0
 
 
 @app.route('/review/<int:term_id>/<int:answer_nr>', methods=['POST'])

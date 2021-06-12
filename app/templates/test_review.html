@@ -87,7 +87,7 @@
 				</div>
 				<div class="col-sm-12 col-md-4">
 					<div class="input-group">
-						<input name="{{answer.question.nr}}" type="number" min="0" max="{{answer.question.points}}" class="form-control" placeholder="Liczba punktów" autocomplete="off" value="0">
+						<input name="{{answer.question.nr}}" type="number" min="0" max="{{answer.question.points}}" class="form-control" placeholder="Liczba punktów" autocomplete="off" value="{{ calc_points(answer) }}">
 						<div class="input-group-append">
 						  <span class="input-group-text bg-secondary text-white"> / {{ answer.question.points }}</span>
 						</div>

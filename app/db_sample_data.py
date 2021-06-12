@@ -33,7 +33,7 @@ def add_test(teacher):
     test.questions.append(q1)
     db.session.add(q1)
 
-    q2 = Question(nr=2, question='Co jest cięższe?', points=4, image=None, type=Question.SINGLE_CHOICE, data={'all': ['1kg piór', '1kg stali'], 'correct': 0})
+    q2 = Question(nr=2, question='Co jest cięższe?', points=4, image=None, type=Question.SINGLE_CHOICE, data={'all': ['1kg piór', '1kg stali'], 'correct': 1})
     test.questions.append(q2)
     db.session.add(q2)
 
@@ -61,7 +61,7 @@ def add_answers(term):
     term.answers.append(test_answer)
     db.session.add(test_answer)
 
-    a1 = QuestionAnswer(data=[0, 5])
+    a1 = QuestionAnswer(data=[0, 1])
     q = term.test.questions[0]
     q.answers.append(a1)
     test_answer.answers.append(a1)
