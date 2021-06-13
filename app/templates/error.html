@@ -1,0 +1,10 @@
+{% extends "standard.html" %}
+
+{% block content %}
+<section class="masthead bg-primary text-white text-center">
+    <div class="container d-flex align-items-center flex-column">
+        <img src="{{ url_for('static',filename='images/error.png') }}" width="200px">
+        <h1 style="margin-top: 100px; margin-bottom: 100px;">Błąd: {{ message }}</h1>
+    </div>
+</section>
+{% endblock %}
