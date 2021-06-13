@@ -7,10 +7,26 @@ from app.models import *
 from app.util import display_form_errors
 from app.email import send_email
 
-@app.route('/')
-@app.route('/index')
-def index():
-    return render_template('index.html')
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('error.html', message='Żądana strona nie istnieje'), 404
+
+
+@app.errorhandler(500)
+def page_not_found(e):
+    return render_template('error.html', message='Wystąpił błąd serwera'), 500
+
+
+@app.errorhandler(401)
+def page_not_found(e):
+    return render_template('error.html', message='Brak autoryzacjia'), 401
+
+
+# @app.route('/')
+# @app.route('/index')
+# def index():
+#     return render_template('index.html')
 
 
 @app.route('/', methods=['POST'])
