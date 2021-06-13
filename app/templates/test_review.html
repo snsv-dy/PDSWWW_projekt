@@ -1,9 +1,9 @@
 {% extends "standard.html" %}
 
 {% macro render_answer(answer) -%}
-	{% if answer.question.type == 0 %}
+	{% if answer.question.type == 1 %}
 		{{ render_single_choice_answer(answer) }}
-	{% elif answer.question.type == 1 %}
+	{% elif answer.question.type == 0 %}
 		{{ render_multiple_choice_answer(answer) }}
 	{% elif answer.question.type == 2 %}
 		{{ render_open_answer(answer) }}
