@@ -9,3 +9,9 @@ def manage():
     return render_template('manage.html')
 
 
+@app.route('/details/<int:test_id>')
+@login_required
+def details(test_id):
+    return render_template('details.html')
+
+

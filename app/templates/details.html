@@ -1,0 +1,105 @@
+{% extends "basic.html" %}
+
+{% block styles %}
+    {{ super() }}
+    <link href="{{ url_for('static',filename='css/manage-styles.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<section class="page-section masthead bg-primary text-white text-center">
+    <!-- File grid section -->
+    <div class="file_manager">
+        <div class="container">
+
+            <!-- Title & Divider section -->
+            <h1 class="masthead-heading text-center text-uppercase mb-0">Test z przyrody</h1>
+
+                        <!-- Test stats section -->
+            <div class="stats">
+                <div class="icon" data-toggle="tooltip" data-placement="top" title="Pytania wielokrotnego wyboru">
+                    <i class="fas fa-tasks fa-2x text-secondary"></i>
+                    <p class="masthead-subheading font-weight-light mb-0">3</p>
+                </div>
+                <div class="icon" data-toggle="tooltip" data-placement="top" title="Pytania jednokrotnego wyboru">
+                    <i class="fas fa-list-ul fa-2x text-secondary"></i>
+                    <p class="masthead-subheading font-weight-light mb-0">5</p>
+                </div>
+                <div class="icon" data-toggle="tooltip" data-placement="top" title="Pytania otwarte">
+                    <i class="fas fa-edit fa-2x text-secondary"></i>
+                    <p class="masthead-subheading font-weight-light mb-0">2</p>
+                </div>
+            </div>
+
+            <!-- Main button section -->
+            <div class="button-bar row justify-content-center">
+                <button class="btn btn-secondary"><i class="fas fa-pen"></i> Edytuj test</button>
+                <button class="btn btn-secondary"><i class="fas fa-file-export"></i> Eksportuj test</button>
+                <button class="btn btn-secondary"><i class="fas fa-plus-circle"></i> Dodaj termin</button>
+                <button class="btn btn-danger"><i class="fas fa-trash-alt"></i> Usuń test</button>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<div class="page-section">
+
+    <!-- Table with ended terms section -->
+    <h3 class="masthead-subheading text-center text-uppercase">Zakończone terminy</h3>
+    <table id="done" class="table table-striped">
+        <thead>
+            <tr>
+                <th>Nazwa terminu</th>
+                <th>Data</th>
+                <th>Sprawdzono</th>
+                <th>Akcja</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Termin 1</td>
+                <td>2021/04/25 14:20</td>
+                <td>23/30</td>
+                <td>
+                    <button class="btn btn-primary mr-1"><i class="fas fa-eye"></i></button>
+                    <button class="btn btn-primary btn-danger"><i class="fas fa-trash-alt"></i></button>
+                </td>
+            </tr>
+            <tr>
+                <td>Termin 1</td>
+                <td>2021/04/25 14:20</td>
+                <td>23/30</td>
+                <td>
+                    <button class="btn btn-primary mr-1"><i class="fas fa-eye"></i></button>
+                    <button class="btn btn-primary btn-danger"><i class="fas fa-trash-alt"></i></button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Table with upcoming terms section -->
+    <h3 class="masthead-subheading text-center text-uppercase mt-4">Zaplanowane terminy</h3>
+    <table id="upcoming" class="table table-striped">
+        <thead>
+            <tr>
+                <th>Nazwa terminu</th>
+                <th>Data</th>
+                <th>Kod</th>
+                <th>Akcja</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Termin 1</td>
+                <td>2021/04/25 14:20</td>
+                <td>xyWsEF</td>
+                <td>
+                    <button class="btn btn-primary mr-1"><i class="fas fa-pen"></i></button>
+                    <button class="btn btn-primary btn-danger"><i class="fas fa-trash-alt"></i></button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>
+{% endblock %}
