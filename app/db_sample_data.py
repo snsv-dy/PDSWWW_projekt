@@ -29,7 +29,7 @@ def add_test(teacher):
     teacher.tests.append(test)
     db.session.add(test)
 
-    q1 = Question(nr=1, question='Z jakich części składa się cep?', points=4, image=None, type=Question.MULTIPLE_CHOICE, data={'all': ['Długi kij', 'Krótki kijek' 'Kawałek sznurka', 'Skrzynia biegów', 'Sprężarka', 'Spust', 'hehe'], 'correct': [0, 1, 2]})
+    q1 = Question(nr=1, question='Z jakich części składa się cep?', points=4, image=['baked_salmon.webp', 'jupiter.jpg'], type=Question.MULTIPLE_CHOICE, data={'all': ['Długi kij', 'Krótki kijek' 'Kawałek sznurka', 'Skrzynia biegów', 'Sprężarka', 'Spust', 'hehe'], 'correct': [0, 1, 2]})
     test.questions.append(q1)
     db.session.add(q1)
 
@@ -37,7 +37,7 @@ def add_test(teacher):
     test.questions.append(q2)
     db.session.add(q2)
 
-    q3 = Question(nr=3, question='To po prawo to tak naprawdę nie jest zdjęcie jowisza, tylko staw z kaczkami', points=6, image=None, type=Question.OPEN)
+    q3 = Question(nr=3, question='To po prawo to tak naprawdę nie jest zdjęcie jowisza, tylko staw z kaczkami', points=6, image=['jupiter.jpg'], type=Question.OPEN)
     test.questions.append(q3)
     db.session.add(q3)
 

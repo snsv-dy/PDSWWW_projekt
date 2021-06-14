@@ -16,7 +16,7 @@
 	<!-- Test title -->
 	<div class="row my-3 test_title">
 		<div class="col-sm-12">
-			<form class="d-flex flex-row" action="/edit/title" method="post">
+			<form class="d-flex flex-row" action="/edit/{{ test_params.id }}/title" method="post">
 				<input class="form-control mr-2" style="width: 300px" type="text" name="test_title" placeholder="Tytuł testu" id="test_title" value="{{ test_params.title }}">
 				<!-- <input class="btn btn-primary " type="submit" value="Zapisz tytuł"> -->
 				<h3>Autor: {{ test_params.author }}</h3>
@@ -30,22 +30,22 @@
 			<ul class="pagination flex-fill">
 				{% for i in range(number_of_questions) %}
 						<li class="page-item flex-fill {{ 'active' if i == current_index - 1}}">
-							<a class="page-link" href="#" onclick="post_all_inputs('/edit/{{ i + 1}}')">{{ i + 1 }} </a>
-							<button class="close" onclick="post_all_inputs('/edit/-1/remove_question/{{ i + 1}}'); return false;">&times;</button>
+							<a class="page-link" href="#" onclick="post_all_inputs('/edit/{{ test_params.id }}/{{ i + 1}}')">{{ i + 1 }} </a>
+							<button class="close" onclick="post_all_inputs('/edit/{{ test_params.id }}/-1/remove_question/{{ i + 1}}'); return false;">&times;</button>
 						</li>
 				{% endfor %}
 				<li class="page-item flex-fill">
 					<div class="dropdown">
 						<a class="page-link text-center" href="#" data-toggle="dropdown">Dodaj pytanie</a>
 						<div class="dropdown-menu">
-							<a class="dropdown-item" href="/edit/-1/add_question/0">Wielokrotny wybór</a>
-							<a class="dropdown-item" href="/edit/-1/add_question/1">Jednokrotny wybór</a>
-							<a class="dropdown-item" href="/edit/-1/add_question/2">Otwarta odpowiedź</a>
+							<a class="dropdown-item" href="/edit/{{ test_params.id }}/-1/add_question/0">Wielokrotny wybór</a>
+							<a class="dropdown-item" href="/edit/{{ test_params.id }}/-1/add_question/1">Jednokrotny wybór</a>
+							<a class="dropdown-item" href="/edit/{{ test_params.id }}/-1/add_question/2">Otwarta odpowiedź</a>
 						</div>
 					</div>
 				</li>
 			</ul>
-			<a class="btn btn-primary align-self-baseline mx-3" href="#" onclick="post_all_inputs('/edit/{{ current_index }}')">Zapisz</a>
+			<a class="btn btn-primary align-self-baseline mx-3" href="#" onclick="post_all_inputs('/edit/{{ test_params.id }}/{{ current_index }}')">Zapisz</a>
 		</div>
 	</div> 
 
@@ -73,7 +73,7 @@
 								<div class="input-group mb-3">
 									<div class="input-group-prepend">
 									  <div class="input-group-text">
-										<input type="{{ 'checkbox' if question.type == 0 else 'radio' }}" name="answer" value={{ loop.index - 1}} {{'checked' if question.data['correct'] and ((question.type == 0 and loop.index - 1 in question.data['correct']) or (question.type == 1 and loop.index - 1 == question.data['correct'])) }}> 
+										<input type="{{ 'checkbox' if question.type == 0 else 'radio' }}" name="answer" value={{ loop.index - 1}} {{'checked' if question.data['correct'] and ((question.type == 0 and (loop.index - 1) in question.data['correct']) or (question.type == 1 and loop.index - 1 == question.data['correct'])) }}> 
 									  </div>
 									</div>
 									<input type="text" class="form-control" name="anwser_text" placeholder="Odpowiedź" value="{{ anwser }}">
@@ -136,9 +136,9 @@
 		<div class="col-sm-4 text-left">javascript time</div>
 		<div class="col-sm-4 text-center"> 
 			<div class="btn-group">
-				<a class="btn btn-primary {{ 'disabled' if current_index == 1 }}" href="#" onclick="post_all_inputs('/edit/{{ current_index - 1}}')">Poprzednie</a>
+				<a class="btn btn-primary {{ 'disabled' if current_index == 1 }}" href="#" onclick="post_all_inputs('/edit/{{ test_params.id }}/{{ current_index - 1}}')">Poprzednie</a>
 				<a class="btn btn-dark disabled">{{ current_index }} / {{ number_of_questions }}</a	>
-				<a class="btn btn-primary {{ 'disabled' if current_index == number_of_questions }}" href="#"  onclick="post_all_inputs('/edit/{{ current_index + 1}}')">Następne</a>
+				<a class="btn btn-primary {{ 'disabled' if current_index == number_of_questions }}" href="#"  onclick="post_all_inputs('/edit/{{ test_params.id }}/{{ current_index + 1}}')">Następne</a>
 			</div>
 			
 		</div>

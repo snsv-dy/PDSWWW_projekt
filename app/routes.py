@@ -230,37 +230,26 @@ def quiz_review_post(term_id, answer_nr):
 def quiz_edit_structure(action, param, test_obj):
     print('quiz edit', test_obj)
     if action == 'add_question' and param in ['0', '1', '2']:
-        question = Question(type=int(param), question='', points=1.0, data = {})
-        # questions = sample_test['questions']
-        # n_questions = len(questions)
-        # question = {
-        #     'index': n_questions + 1,
-        #     'type': int(param),
-        #     'content': '',
-        #     'points': 1
-        # }
+        question = Question(type=int(param), question='', points=1.0, data=None, nr=len(test_obj.questions))
 
         if param in ['0', '1']:
-            question.data['all'] = []
-            question.data['correct'] = []
+            data = {'all': [], 'correct': []}
 
         test_obj.questions.append(question)
-        # sample_test['questions'].append(question)
-        # sample_test['number_of_questions'] += 1
-        # print(sample_test['questions'])
-        return redirect('/edit/' + str(len(test_obj.questions)))
+        db.session.add(question)
+        db.session.add(test_obj)
+        db.session.commit()
+        print('test questions AAAA', test_obj.questions)
+        return redirect('/edit/' + str(test_obj.id) + '/' + str(len(test_obj.questions)))
     elif action == 'remove_question':
         print('yeee')
         index = int(param) - 1
 
+        # To na dole nie działa, i pytania nie są usuwane z bazy danych.
+        # Question.query.filter_by(id=test_obj.questions[index].id).delete()
         del test_obj.questions[index]
-        # n_questions = sample_test['number_of_questions']
-
-        # for i in range(index, n_questions):
-        #     sample_test['questions'][i]['index'] -= 1
-
-        # del sample_test['questions'][index]
-        # sample_test['number_of_questions'] -= 1
+        db.session.add(test_obj)
+        db.session.commit()
         return redirect('/edit/' + str(index))
 
 def update_test_question(form, test_obj):
@@ -275,48 +264,58 @@ def update_test_question(form, test_obj):
 
     print('index', index, 'rest', title, points, question_content)
 
-    sample_test['title'] = title
+    test_obj.title = title
     question = test_obj.questions[index]
-    question.poins = float(points)
+    question.points = float(points)
     question.question = question_content
 
     if question_type in ['0', '1']:
         answers = form.getlist('anwser_text')
         correct_answers = form.getlist('answer')
-        
+
+        question.data = {}
         question.data['all'] = answers
         question.data['correct'] = [ int(i) for i in correct_answers ]
         if question_type == '1' and len(question.data['correct']) == 1:
             question.data['correct'] = question.data['correct'][0]
 
+    db.session.add(test_obj)
+    db.session.add(question)
+    db.session.commit()
+    db.session.flush()
+
 # @login_required
-@app.route('/edit/')
-@app.route('/edit/<int:number>', methods=['POST', 'GET'])
-@app.route('/edit/-1/<action>/<param>', methods=['GET', 'POST'])
-def quiz_edit(number=None, action=None, param=None):
-    if action is not None and param is not None:
-        print("wnnnhng", action, param)
-        return quiz_edit_structure(action, param, quiz_edit.Test)
+@app.route('/edit/<int:test_id>')
+@app.route('/edit/<int:test_id>/<int:number>', methods=['POST', 'GET'])
+@app.route('/edit/<int:test_id>/-1/<action>/<param>', methods=['GET', 'POST'])
+def quiz_edit(test_id=None, number=None, action=None, param=None):
+    if test_id == None:
+        flash('Nieznany test.', 'error')
+        return redirect(url_for('/manage'))
 
-    if number is None:
-        return redirect('/edit/1')
-
-    if quiz_edit.Test is None:
-        quiz_edit.Test = Test.query.filter_by(id=1).first()
+    test = Test.query.filter_by(id=test_id).first()
 
     if len(request.form) > 0:
-        update_test_question(request.form, quiz_edit.Test)
+        update_test_question(request.form, test)
+
+    if action is not None and param is not None:
+        return quiz_edit_structure(action, param, test)
+
+    if number is None:
+        return redirect('/edit/1/1')
+
+    # if quiz_edit.Test is None:
+    #     quiz_edit.Test = Test.query.filter_by(id=1).first()
 
     number -= 1
-    questions = quiz_edit.Test.questions
+    questions = test.questions
 
     if number < 0 or number >= len(questions):
         number = 0
 
     question = questions[number]
     # print('eeee', question.data['correct'])
-    return render_template('test_edit.html', test_params=sample_test, question=question, number_of_questions=len(quiz_edit.Test.questions), current_index=number + 1)
-quiz_edit.Test = None
+    return render_template('test_edit.html', test_params=test, question=question, number_of_questions=len(test.questions), current_index=number + 1)
 
 def update_previous_question(form, answer_obj, test_obj):
     question_type = form.get('question_type')
@@ -367,13 +366,6 @@ def quiz(number):
         # powinno być ustawiwane przed testem.
         flash('Nie rozpoczęto testu.', 'error')
         return redirect('/')
-        # term = TestTerm.query.filter_by(id=1).first()
-        # answer_obj = TestAnswer(email='emal@yeah.coc', full_name='empty hand')
-        # term.answers.append(answer_obj)
-        # db.session.add(term)
-        # db.session.add(answer_obj)
-        # db.session.commit()
-        # session['answer_id'] = answer_obj.id
     
     print('session: ', session.get('answer_id'))
     answer_obj = TestAnswer().query.filter_by(id=session['answer_id']).first()
@@ -391,9 +383,13 @@ def quiz(number):
         update_previous_question(request.form, answer_obj, test)
 
     if number == 0:
+        # To też coś nie działa jak trzeba, po kliknięciu zakończ, odpowiedź pytania nie jest zapisywana.
+        print('updating test')
         return redirect('/test_finish')
 
-    test_obj = Test.query.filter_by(id=1).first()
+    term_obj = TestTerm.query.filter_by(id=answer_obj.test_term_id).first()
+    test_obj = Test.query.filter_by(id=term_obj.testid).first()
+    
     questions = test_obj.questions
     number -= 1
 
@@ -407,7 +403,7 @@ def quiz(number):
     if len(answer_obj.answers) > number:
         answer = answer_obj.answers[number].data
     print(answer)
-    return render_template('test.html', test_params=sample_test, question=question, anwsers=answer, current_index=number + 1)
+    return render_template('test.html', test_params=test_obj, question=question, anwsers=answer, current_index=number + 1)
 
 @app.route('/test_summary')
 def test_summary():

@@ -20,7 +20,7 @@ document.forms['anwser'].action = '{{action}}'; document.forms['anwser'].submit(
 
 	<!-- Question list -->
 	<ul class="pagination d-flex">
-		{% for i in range(test_params.number_of_questions) %}
+		{% for i in range(test_params.questions|length) %}
 				<li class="page-item flex-fill {{ 'active' if i == current_index - 1}}">
 					<a class="page-link text-center" href="#" onclick="{{ submit_form_to('/test/' ~ (i + 1)) }}">{{ i + 1 }}</a>
 				</li>
