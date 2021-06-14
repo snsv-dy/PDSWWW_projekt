@@ -58,7 +58,19 @@ def before_test(term_id):
     # TODO: Można by na tej stronie dodać pole do podania nazwiska i adresu email (Chyba że na stronie głównej)
 
     # Generowanie id
-    return render_template('before_test.html', )
+    term = TestTerm.query.filter_by(id=term_id).first()
+    if term is None:
+        flash("Nie znaleziono terminu testu.")
+        return redirect(url_for('index'))
+
+    answer_obj = TestAnswer(email='emal@yeah.coc', full_name='empty hand')
+    term.answers.append(answer_obj)
+    db.session.add(term)
+    db.session.add(answer_obj)
+    db.session.commit()
+    session['answer_id'] = answer_obj.id
+
+    return render_template('before_test.html', id=answer_obj.id)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -346,24 +358,22 @@ def quiz_end():
     return redirect('/test_summary')
 
 
-@app.route('/test/')
+@app.route('/test/', defaults={'number': 1})
 @app.route('/test/<int:number>', methods=['GET', 'POST'])
-def quiz(number=1):
-    if quiz.test_answer is None:
-        print("new sess")
-        quiz.test_answer = TestAnswer()
-        quiz.question_answers = {}
-
+def quiz(number):
+    print('quiz-1', number)
     if session.get('answer_id') is None:
         # Tymczasowe przypisywanie odpowiedzi na test
         # powinno być ustawiwane przed testem.
-        term = TestTerm.query.filter_by(id=1).first()
-        answer_obj = TestAnswer(email='emal@yeah.coc', full_name='empty hand')
-        term.answers.append(answer_obj)
-        db.session.add(term)
-        db.session.add(answer_obj)
-        db.session.commit()
-        session['answer_id'] = answer_obj.id
+        flash('Nie rozpoczęto testu.', 'error')
+        return redirect('/')
+        # term = TestTerm.query.filter_by(id=1).first()
+        # answer_obj = TestAnswer(email='emal@yeah.coc', full_name='empty hand')
+        # term.answers.append(answer_obj)
+        # db.session.add(term)
+        # db.session.add(answer_obj)
+        # db.session.commit()
+        # session['answer_id'] = answer_obj.id
     
     print('session: ', session.get('answer_id'))
     answer_obj = TestAnswer().query.filter_by(id=session['answer_id']).first()
@@ -371,19 +381,18 @@ def quiz(number=1):
         # Prawdopodobnie jeszcze jest id z poprzedniej sesji i trzeba usunąć ciasteczko,
         # ale to zdarza się tylko po czyszczeniu bazy danych.
         del session['answer_id']
-        return redirect('/test') # zmień na strone główną.
-        pass
+        return redirect(url_for('index')) # zmień na strone główną.
 
     print('answer ', answer_obj, answer_obj.id)
     if len(request.form) > 0:
-        question_id = -1
         term = TestTerm.query.filter_by(id=answer_obj.test_term_id).first()
         test = Test.query.filter_by(id=term.testid).first()
 
         update_previous_question(request.form, answer_obj, test)
-        # update_previous_question(request.form, quiz.test_answer, quiz.question_answers)
 
-    # questions = sample_test['questions']
+    if number == 0:
+        return redirect('/test_finish')
+
     test_obj = Test.query.filter_by(id=1).first()
     questions = test_obj.questions
     number -= 1
@@ -399,7 +408,6 @@ def quiz(number=1):
         answer = answer_obj.answers[number].data
     print(answer)
     return render_template('test.html', test_params=sample_test, question=question, anwsers=answer, current_index=number + 1)
-quiz.test_answer = None
 
 @app.route('/test_summary')
 def test_summary():

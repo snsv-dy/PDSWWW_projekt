@@ -18,6 +18,8 @@
         </div>
         <h5 class="masthead-subheading">Autor: Jan Kowalski</h5>
         <h5 class="masthead-subheading">Czas podejścia: 30 min</h5>
+        <!-- Usunąć w ostatecznej wersji -->
+        <h5 class="masthead-subheading">Twoje id: {{ id }}</h5>
         <div class="stats">
             <div class="icon" data-toggle="tooltip" data-placement="top" title="Pytania wielokrotnego wyboru">
                 <i class="fas fa-tasks fa-2x text-secondary"></i>
@@ -33,7 +35,7 @@
             </div>
         </div>
         <p class="text-center text-danger">Uwaga! Nie można nawigować pomiędzy pytaniami</p>
-        <button class="btn btn-primary btn-lg"><i class="fas fa-hand-pointer"></i> Rozpocznij test</button>
+        <a href="/test" class="btn btn-primary btn-lg"><i class="fas fa-hand-pointer"></i> Rozpocznij test</a>
     </div>
 </section>
 {% endblock %}
