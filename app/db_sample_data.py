@@ -6,7 +6,6 @@ import datetime
 
 next_term = 1000
 
-
 def initialize():
 
     if Teacher.query.first() is not None:
@@ -18,7 +17,8 @@ def initialize():
     teacher.password = 'password'
     db.session.add(teacher)
 
-    for i in range(5):
+    # for i in range(5):
+    for i in range(1):
         add_test(teacher)
 
     db.session.commit()
@@ -41,7 +41,8 @@ def add_test(teacher):
     test.questions.append(q3)
     db.session.add(q3)
 
-    for i in range(5):
+    # for i in range(5):
+    for i in range(1):
         add_term(test)
 
 

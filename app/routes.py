@@ -23,10 +23,10 @@ def page_not_found(e):
     return render_template('error.html', message='Brak autoryzacjia'), 401
 
 
-# @app.route('/')
-# @app.route('/index')
-# def index():
-#     return render_template('index.html')
+@app.route('/')
+@app.route('/index')
+def index():
+    return render_template('index.html')
 
 
 @app.route('/', methods=['POST'])
@@ -56,7 +56,9 @@ def manage():
 @app.route('/before_test/<int:term_id>')
 def before_test(term_id):
     # TODO: Można by na tej stronie dodać pole do podania nazwiska i adresu email (Chyba że na stronie głównej)
-    return render_template('before_test.html')
+
+    # Generowanie id
+    return render_template('before_test.html', )
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -212,9 +214,9 @@ def quiz_review_post(term_id, answer_nr):
 # sample_test['questions'][0]['anwsers'].append('hehe')
 # question_anwsers = [[1, 3], 2, 'Siema']
 
-@app.route('/edit/structure/<action>/<param>', methods=['GET', 'POST'])
-def quiz_edit_structure(action, param):
-    print('quiz edit', quiz_edit.Test)
+# @app.route('/edit/structure/<action>/<param>', methods=['GET', 'POST'])
+def quiz_edit_structure(action, param, test_obj):
+    print('quiz edit', test_obj)
     if action == 'add_question' and param in ['0', '1', '2']:
         question = Question(type=int(param), question='', points=1.0, data = {})
         # questions = sample_test['questions']
@@ -230,23 +232,24 @@ def quiz_edit_structure(action, param):
             question.data['all'] = []
             question.data['correct'] = []
 
-        quiz_edit.Test.questions.append(question)
+        test_obj.questions.append(question)
         # sample_test['questions'].append(question)
         # sample_test['number_of_questions'] += 1
         # print(sample_test['questions'])
-        return redirect('/edit/' + str(len(quiz_edit.Test.questions)))
+        return redirect('/edit/' + str(len(test_obj.questions)))
     elif action == 'remove_question':
         print('yeee')
         index = int(param) - 1
 
-        n_questions = sample_test['number_of_questions']
+        del test_obj.questions[index]
+        # n_questions = sample_test['number_of_questions']
 
-        for i in range(index, n_questions):
-            sample_test['questions'][i]['index'] -= 1
+        # for i in range(index, n_questions):
+        #     sample_test['questions'][i]['index'] -= 1
 
-        del sample_test['questions'][index]
-        sample_test['number_of_questions'] -= 1
-        return redirect('/test_edit/' + str(index))
+        # del sample_test['questions'][index]
+        # sample_test['number_of_questions'] -= 1
+        return redirect('/edit/' + str(index))
 
 def update_test_question(form, test_obj):
     print(form)
@@ -271,13 +274,21 @@ def update_test_question(form, test_obj):
         
         question.data['all'] = answers
         question.data['correct'] = [ int(i) for i in correct_answers ]
-        if question_type == '1':
+        if question_type == '1' and len(question.data['correct']) == 1:
             question.data['correct'] = question.data['correct'][0]
 
 # @login_required
 @app.route('/edit/')
 @app.route('/edit/<int:number>', methods=['POST', 'GET'])
-def quiz_edit(number=1):
+@app.route('/edit/-1/<action>/<param>', methods=['GET', 'POST'])
+def quiz_edit(number=None, action=None, param=None):
+    if action is not None and param is not None:
+        print("wnnnhng", action, param)
+        return quiz_edit_structure(action, param, quiz_edit.Test)
+
+    if number is None:
+        return redirect('/edit/1')
+
     if quiz_edit.Test is None:
         quiz_edit.Test = Test.query.filter_by(id=1).first()
 
@@ -291,11 +302,11 @@ def quiz_edit(number=1):
         number = 0
 
     question = questions[number]
-    print('eeee', question.data['correct'])
+    # print('eeee', question.data['correct'])
     return render_template('test_edit.html', test_params=sample_test, question=question, number_of_questions=len(quiz_edit.Test.questions), current_index=number + 1)
 quiz_edit.Test = None
 
-def update_previous_question(form, test_anwser, question_answers):
+def update_previous_question(form, answer_obj, test_obj):
     question_type = form.get('question_type')
     question_index = form.get('question_index')
 
@@ -304,17 +315,36 @@ def update_previous_question(form, test_anwser, question_answers):
 
     print(anwser, index)
 
-    anwser_obj = question_answers.get(index)
-    if anwser_obj is None:
-        anwser_obj = QuestionAnswer()
-        question_answers[index] = anwser_obj
-        
+    question_obj = None
+    if index < len(answer_obj.answers):
+        question_obj = answer_obj.answers[index]
+    else:
+        question_obj = QuestionAnswer()
+        answer_obj.answers.append(question_obj)
+        test_obj.questions[index].answers.append(question_obj)
+
+        db.session.add(test_obj.questions[index])
+        db.session.add(test_obj)
+
     if question_type == '0' and len(anwser) > 0:
-        anwser_obj.data = [int(i) for i in anwser]
+        question_obj.data = [int(i) for i in anwser]
     elif question_type == '1' and len(anwser) > 0:
-        anwser_obj.data = int(anwser[0])
+        question_obj.data = int(anwser[0])
     elif question_type == '2' and len(anwser) > 0:
-        anwser_obj.data = anwser[0]
+        question_obj.data = anwser[0]
+
+    db.session.add(question_obj)
+    db.session.add(answer_obj)
+    db.session.commit()
+
+
+@app.route('/test_finish')
+def quiz_end():
+    if session.get('answer_id') is not None:
+        answer_obj = TestAnswer().query.filter_by(id=session['answer_id']).first()
+        del session['answer_id']
+    return redirect('/test_summary')
+
 
 @app.route('/test/')
 @app.route('/test/<int:number>', methods=['GET', 'POST'])
@@ -324,14 +354,38 @@ def quiz(number=1):
         quiz.test_answer = TestAnswer()
         quiz.question_answers = {}
 
+    if session.get('answer_id') is None:
+        # Tymczasowe przypisywanie odpowiedzi na test
+        # powinno być ustawiwane przed testem.
+        term = TestTerm.query.filter_by(id=1).first()
+        answer_obj = TestAnswer(email='emal@yeah.coc', full_name='empty hand')
+        term.answers.append(answer_obj)
+        db.session.add(term)
+        db.session.add(answer_obj)
+        db.session.commit()
+        session['answer_id'] = answer_obj.id
+    
+    print('session: ', session.get('answer_id'))
+    answer_obj = TestAnswer().query.filter_by(id=session['answer_id']).first()
+    if answer_obj is None:
+        # Prawdopodobnie jeszcze jest id z poprzedniej sesji i trzeba usunąć ciasteczko,
+        # ale to zdarza się tylko po czyszczeniu bazy danych.
+        del session['answer_id']
+        return redirect('/test') # zmień na strone główną.
+        pass
+
+    print('answer ', answer_obj, answer_obj.id)
     if len(request.form) > 0:
-        update_previous_question(request.form, quiz.test_answer, quiz.question_answers)
+        question_id = -1
+        term = TestTerm.query.filter_by(id=answer_obj.test_term_id).first()
+        test = Test.query.filter_by(id=term.testid).first()
+
+        update_previous_question(request.form, answer_obj, test)
+        # update_previous_question(request.form, quiz.test_answer, quiz.question_answers)
 
     # questions = sample_test['questions']
     test_obj = Test.query.filter_by(id=1).first()
     questions = test_obj.questions
-    print(questions)
-
     number -= 1
 
     if number < 0 or number >= len(questions):
@@ -339,9 +393,10 @@ def quiz(number=1):
 
     question = questions[number]
     
-    answer = quiz.question_answers.get(number)
-    if answer:
-        answer = answer.data
+    answer = None #quiz.question_answers.get(number) 
+    # if answer:
+    if len(answer_obj.answers) > number:
+        answer = answer_obj.answers[number].data
     print(answer)
     return render_template('test.html', test_params=sample_test, question=question, anwsers=answer, current_index=number + 1)
 quiz.test_answer = None

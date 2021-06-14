@@ -76,7 +76,11 @@ function add_anwser(type) {
 
 	var n_questions = 0;
 	if('answer' in document.forms[1]){
-		n_questions = document.forms[1].answer.length;
+		if(typeof document.forms[1].answer[Symbol.iterator] === 'function') {
+			n_questions = document.forms[1].answer.length;
+		}else{
+			n_questions = 1;
+		}
 	}
 
 	var checkbox = document.createElement('input');

@@ -31,16 +31,16 @@
 				{% for i in range(number_of_questions) %}
 						<li class="page-item flex-fill {{ 'active' if i == current_index - 1}}">
 							<a class="page-link" href="#" onclick="post_all_inputs('/edit/{{ i + 1}}')">{{ i + 1 }} </a>
-							<button class="close" onclick="post_all_inputs('/edit/structure/remove_question/{{ i + 1}}'); return false;">&times;</button>
+							<button class="close" onclick="post_all_inputs('/edit/-1/remove_question/{{ i + 1}}'); return false;">&times;</button>
 						</li>
 				{% endfor %}
 				<li class="page-item flex-fill">
 					<div class="dropdown">
 						<a class="page-link text-center" href="#" data-toggle="dropdown">Dodaj pytanie</a>
 						<div class="dropdown-menu">
-							<a class="dropdown-item" href="/edit/structure/add_question/0">Wielokrotny wybór</a>
-							<a class="dropdown-item" href="/edit/structure/add_question/1">Jednokrotny wybór</a>
-							<a class="dropdown-item" href="/edit/structure/add_question/2">Otwarta odpowiedź</a>
+							<a class="dropdown-item" href="/edit/-1/add_question/0">Wielokrotny wybór</a>
+							<a class="dropdown-item" href="/edit/-1/add_question/1">Jednokrotny wybór</a>
+							<a class="dropdown-item" href="/edit/-1/add_question/2">Otwarta odpowiedź</a>
 						</div>
 					</div>
 				</li>
