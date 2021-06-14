@@ -1,71 +1,81 @@
-sample_test = {
-	'title': 'tytuł',
-	'author': 'autor',
-	'questions': [
-		{
-			'index': 1,
-			'type': 0,
-			'content': 'Z jakich części składa się cep?',
-			'anwsers': [
-				'Długi kij',
-				'Krótki kijek',
-				'Kawałek sznurka',
-				'Skrzynia biegów',
-				'Sprężarka',
-				'Spust'
-			],
-			'images': [
-				'baked_salmon.webp',
-				'jupiter.jpg'
-			],
-			'points': 2
-		},
-		{
-			'index': 2,
-			'type': 1,
-			'content': 'Co jest cięższe?',
-			'anwsers': [
-				'1kg piór',
-				'1kg stali'
-			],
-			'points': 2
-		},
-		{
-			'index': 3,
-			'type': 2,
-			'content': 'To po prawo to tak naprawdę nie jest zdjęcie jowisza, tylko staw z kaczkami.',
-			'images': [
-				'jupiter.jpg'
-			],
-			'points': 2
-		}
-	],
-	'number_of_questions': 3
-}
+import random
 
-sample_anwsers = {
-	'title': 'Zaliczenie',
-	'date': '21.06.21',
-	'subject': 'SCR',
-	'grade': 3.5,
-	'anwsers': [
-		{
-			'index': 1,
-			'question': 'Czy tramwaj 41 w pabianicach działa?',
-			'anwser': 'Nie',
-			'points': 4
-		},
-		{
-			'index': 2,
-			'question': 'Ile pięter ma siedmiopiętrowy budynek?',
-			'anwser': '7 lub 12',
-			'points': 7
-		},
-		{
-			'index': 3,
-			'question': 'Co w trawie piszczy?',
-			'anwser': 'Bieda',
-			'points': 1
-		}
-	]
-}
+from app.models import *
+import datetime
+
+
+next_term = 1000
+
+def initialize():
+
+    if Teacher.query.first() is not None:
+        return
+
+    print('Initializing DB')
+
+    teacher = Teacher(email='teacher@p.lodz.pl', full_name='Piotr Nowak')
+    teacher.password = 'password'
+    db.session.add(teacher)
+
+    # for i in range(5):
+    for i in range(1):
+        add_test(teacher)
+
+    db.session.commit()
+
+
+def add_test(teacher):
+    test = Test(title='Test z przyrody')
+    teacher.tests.append(test)
+    db.session.add(test)
+
+    q1 = Question(nr=1, question='Z jakich części składa się cep?', points=4, image=['baked_salmon.webp', 'jupiter.jpg'], type=Question.MULTIPLE_CHOICE, data={'all': ['Długi kij', 'Krótki kijek' 'Kawałek sznurka', 'Skrzynia biegów', 'Sprężarka', 'Spust', 'hehe'], 'correct': [0, 1, 2]})
+    test.questions.append(q1)
+    db.session.add(q1)
+
+    q2 = Question(nr=2, question='Co jest cięższe?', points=4, image=None, type=Question.SINGLE_CHOICE, data={'all': ['1kg piór', '1kg stali'], 'correct': 1})
+    test.questions.append(q2)
+    db.session.add(q2)
+
+    q3 = Question(nr=3, question='To po prawo to tak naprawdę nie jest zdjęcie jowisza, tylko staw z kaczkami', points=6, image=['jupiter.jpg'], type=Question.OPEN)
+    test.questions.append(q3)
+    db.session.add(q3)
+
+    # for i in range(5):
+    for i in range(1):
+        add_term(test)
+
+
+def add_term(test):
+    global next_term
+    term = TestTerm(time=datetime.datetime.now(), code=next_term)
+    next_term += 1
+    test.terms.append(term)
+    db.session.add(term)
+
+    for i in range(10):
+        add_answers(term)
+
+
+def add_answers(term):
+    test_answer = TestAnswer(email='student@edu.p.lodz.pl', full_name='Mateusz Kowalski')
+    term.answers.append(test_answer)
+    db.session.add(test_answer)
+
+    a1 = QuestionAnswer(data=[0, 1])
+    q = term.test.questions[0]
+    q.answers.append(a1)
+    test_answer.answers.append(a1)
+    db.session.add(a1)
+
+    a2 = QuestionAnswer(data=1)
+    q = term.test.questions[1]
+    q.answers.append(a2)
+    test_answer.answers.append(a2)
+    db.session.add(a2)
+
+    a3 = QuestionAnswer(data='Nie wiem')
+    q = term.test.questions[2]
+    q.answers.append(a3)
+    test_answer.answers.append(a3)
+    db.session.add(a3)

@@ -8,7 +8,7 @@
 
 {% block top_scripts %} 
 	{{ super() }}
-	<script type="text/javascript" src="{{ url_for('static',filename='edit_script.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static',filename='scripts/edit_script.js') }}"></script>
 {% endblock %}
 
 {% block content %}
@@ -133,7 +133,7 @@
 <!-- Bottom controls -->
 <section class="container bg-light border py-2 mb-5">
 	<div class="row">
-		<div class="col-sm-4 text-left">javascript time</div>
+		<div class="col-sm-4 text-left"></div>
 		<div class="col-sm-4 text-center"> 
 			<div class="btn-group">
 				<a class="btn btn-primary {{ 'disabled' if current_index == 1 }}" href="#" onclick="post_all_inputs('/edit/{{ test_params.id }}/{{ current_index - 1}}')">Poprzednie</a>
