@@ -1,29 +1,32 @@
 from flask import render_template, flash, redirect, url_for, request, session
 from app import app
 from app.models import *
+from app.forms import BeforeTestForm
 
 
-@app.route('/before_test/<int:term_id>')
+@app.route('/before_test/<int:term_id>', methods=['GET', 'POST'])
 def before_test(term_id):
-    # TODO: Można by na tej stronie dodać pole do podania nazwiska i adresu email (Chyba że na stronie głównej)
-
     # Generowanie id
     term = TestTerm.query.filter_by(id=term_id).first()
     if term is None:
         flash("Nie znaleziono terminu testu.")
         return redirect(url_for('index'))
 
-    answer_obj = TestAnswer(email='emal@yeah.coc', full_name='empty hand')
-    term.answers.append(answer_obj)
-    db.session.add(term)
-    db.session.add(answer_obj)
-    db.session.commit()
-    session['answer_id'] = answer_obj.id
+    form = BeforeTestForm()
+    if form.validate_on_submit():
+        answer_obj = TestAnswer(email=form.email.data, full_name=form.name.data)
+        term.answers.append(answer_obj)
+        db.session.add(term)
+        db.session.add(answer_obj)
+        db.session.commit()
+        session['answer_id'] = answer_obj.id
 
-    return render_template('before_test.html', id=answer_obj.id)
+        flash('Test się rozpoczyna, powodzenia!', 'success')
+        return redirect(url_for('quiz', number=1))
+
+    return render_template('before_test.html', form=form)
 
 
-@app.route('/test/', defaults={'number': 1})
 @app.route('/test/<int:number>', methods=['GET', 'POST'])
 def quiz(number):
     print('quiz-1', number)

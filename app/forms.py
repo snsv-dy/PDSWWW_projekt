@@ -23,3 +23,9 @@ class RegistrationForm(FlaskForm):
     def validate_email(_, field):
         if Teacher.query.filter_by(email=field.data.lower()).first():
             raise ValidationError('Podany adres email jest już zarejestrowany')
+
+
+class BeforeTestForm(FlaskForm):
+    name = StringField('Twoje imie i nazwisko', validators=[DataRequired()])
+    email = StringField('Twój adres e-mail', validators=[DataRequired(), EMAIL_VALIDATOR])
+    submit = SubmitField('Rozpocznij test')
