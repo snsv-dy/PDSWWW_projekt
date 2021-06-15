@@ -72,6 +72,44 @@ def delete_term(term_id):
     return redirect(url_for('details', test_id=term.testid))
 
 
+@app.route('/activate_term/<int:term_id>')
+@login_required
+def activate_term(term_id):
+    check_res = check_term(term_id)
+    if check_res is not None: return check_res
+
+    term = TestTerm.query.filter_by(id=term_id).first()
+
+    if term.status != TestTerm.PENDING:
+        flash('Terminu nie można aktywować', 'error')
+        return redirect(url_for('details', test_id=term.testid))
+
+    term.status = TestTerm.ACTIVE
+    db.session.commit()
+
+    flash('Pomyślnie aktywowano termin', 'success')
+    return redirect(url_for('details', test_id=term.testid))
+
+
+@app.route('/finish_term/<int:term_id>')
+@login_required
+def finish_term(term_id):
+    check_res = check_term(term_id)
+    if check_res is not None: return check_res
+
+    term = TestTerm.query.filter_by(id=term_id).first()
+
+    if term.status != TestTerm.ACTIVE:
+        flash('Terminu nie można zakończyć', 'error')
+        return redirect(url_for('details', test_id=term.testid))
+
+    term.status = TestTerm.FINISHED
+    db.session.commit()
+
+    flash('Pomyślnie zakończono termin', 'success')
+    return redirect(url_for('details', test_id=term.testid))
+
+
 @app.route('/export/<int:test_id>')
 @login_required
 def export_test(test_id):

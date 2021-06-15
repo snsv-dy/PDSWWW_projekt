@@ -11,7 +11,7 @@
         <td>{{ moment(term.creation_date).format('LL h:mm') }}</td>
         <td>{{ term.code }}</td>
         <td>
-            <button class="btn btn-primary mr-1" data-toggle="tooltip" data-placement="top" title="Aktywuj termin"><i class="fas fa-forward"></i></button>
+            <a href="{{ url_for('activate_term', term_id=term.id) }}"><button class="btn btn-primary mr-1" data-toggle="tooltip" data-placement="top" title="Aktywuj termin"><i class="fas fa-forward"></i></button></a>
             <a href="{{ url_for('delete_term', term_id=term.id) }}"><button class="btn btn-primary btn-danger" data-toggle="tooltip" data-placement="top" title="Usuń termin"><i class="fas fa-trash-alt"></i></button></a>
         </td>
     </tr>
@@ -24,7 +24,7 @@
         <td>{{ term.code }}</td>
         <td>{{ term.answers|length }}</td>
         <td>
-            <button class="btn btn-primary mr-1" data-toggle="tooltip" data-placement="top" title="Zakończ termin"><i class="fas fa-stop"></i></button>
+            <a href="{{ url_for('finish_term', term_id=term.id) }}"><button class="btn btn-primary mr-1" data-toggle="tooltip" data-placement="top" title="Zakończ termin"><i class="fas fa-stop"></i></button></a>
         </td>
     </tr>
 {%- endmacro %}
