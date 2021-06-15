@@ -24,7 +24,7 @@ def before_test(term_id):
         flash('Test się rozpoczyna, powodzenia!', 'success')
         return redirect(url_for('quiz', number=1))
 
-    return render_template('before_test.html', form=form)
+    return render_template('before_test.html', term=term, form=form)
 
 
 @app.route('/test/<int:number>', methods=['GET', 'POST'])

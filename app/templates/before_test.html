@@ -10,40 +10,58 @@
 {% block content %}
 <section class="page-section masthead bg-primary text-white text-center">
     <div class="before-test center-block text-center">
-        <h1 class="masthead-heading text-uppercase mb-0">Test z przyrody</h1>
-        <h4 class="masthead-subheading mb-0">Termin 1</h4>
+        <h1 class="masthead-heading text-uppercase mb-0">{{ term.test.title }}</h1>
+        <h4 class="masthead-subheading mb-0">{{ term.name }}</h4>
         <div class="divider-custom">
             <div class="divider-custom-line"></div>
             <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
             <div class="divider-custom-line"></div>
         </div>
-        <h5 class="masthead-subheading">Autor: Jan Kowalski</h5>
-        <h5 class="masthead-subheading">Czas podejścia: 30 min</h5>
+        <h5 class="masthead-subheading">Autor: {{ term.test.teacher.full_name }}</h5>
+        <h5 class="masthead-subheading">Czas podejścia: {{ term.test.time }} min.</h5>
         <!-- Usunąć w ostatecznej wersji -->
         <div class="stats">
             <div class="icon" data-toggle="tooltip" data-placement="top" title="Pytania wielokrotnego wyboru">
                 <i class="fas fa-tasks fa-2x text-secondary"></i>
-                <p class="masthead-subheading font-weight-light mb-0">3</p>
+                <p class="masthead-subheading font-weight-light mb-0">{{ term.test.get_questions_count()[1] }}</p>
             </div>
             <div class="icon" data-toggle="tooltip" data-placement="top" title="Pytania jednokrotnego wyboru">
                 <i class="fas fa-list-ul fa-2x text-secondary"></i>
-                <p class="masthead-subheading font-weight-light mb-0">5</p>
+                <p class="masthead-subheading font-weight-light mb-0">{{ term.test.get_questions_count()[0] }}</p>
             </div>
             <div class="icon" data-toggle="tooltip" data-placement="top" title="Pytania otwarte">
                 <i class="fas fa-edit fa-2x text-secondary"></i>
-                <p class="masthead-subheading font-weight-light mb-0">2</p>
+                <p class="masthead-subheading font-weight-light mb-0">{{ term.test.get_questions_count()[2] }}</p>
             </div>
         </div>
     </div>
 </section>
 
-
 <section class="bottom-section">
-    <p class="text-center text-danger">Uwaga! Nie można nawigować pomiędzy pytaniami</p>
+
     <div class="row justify-content-center mt-5">
-        <div class="col-12 col-lg-4">
+        {% if term.status == term.ACTIVE %}
+        <div class="col-12 text-center">
+            <h1 class="masthead-heading text-uppercase mb-0 p-5">Możesz rozpocząć test</h1>
+        </div>
+        <div class="col-12 col-lg-4 text-center">
             {{ wtf.quick_form(form) }}
         </div>
+        {% endif %}
+
+        {% if term.status == term.PENDING %}
+        <div class="text-center">
+            <h1 class="masthead-heading text-uppercase mb-0 p-5">Test nie jest jeszcze aktywny</h1>
+        </div>
+        {% endif %}
+
+        {% if term.status == term.FINISHED %}
+        <div class="text-center">
+            <h1 class="masthead-heading text-uppercase mb-0 p-5">Test się już zakończył</h1>
+        </div>
+        {% endif %}
+
     </div>
+
 </section>
 {% endblock %}

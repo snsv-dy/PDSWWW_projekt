@@ -25,7 +25,7 @@ def initialize():
 
 
 def add_test(teacher):
-    test = Test(title='Test z przyrody')
+    test = Test(title='Test z przyrody', time=25)
     teacher.tests.append(test)
     db.session.add(test)
 

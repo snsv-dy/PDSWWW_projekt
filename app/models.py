@@ -45,6 +45,7 @@ class Test(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     questions = db.relationship("Question", backref="test", lazy='select', order_by='Question.nr', cascade='all,delete')
     title = db.Column(db.String, default="Brak nazwy")
+    time = db.Column(db.Integer, default=10)    # In minutes
     teacherid = db.Column(db.Integer, db.ForeignKey('teacher.id'))
     creation_date = db.Column(db.DateTime, default=datetime.utcnow)
     terms = db.relationship("TestTerm", backref="test", lazy='select', cascade='all,delete')
