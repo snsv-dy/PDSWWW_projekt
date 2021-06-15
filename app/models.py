@@ -48,19 +48,55 @@ class Test(db.Model):
     creation_date = db.Column(db.DateTime, default=datetime.utcnow)
     terms = db.relationship("TestTerm", backref="test", lazy='select')
 
+    def get_questions_count(self):
+        single_choice_count = 0
+        multiple_choice_count = 0
+        open_count = 0
+
+        for question in self.questions:
+            if question.type == Question.SINGLE_CHOICE:
+                single_choice_count += 1
+            elif question.type == Question.MULTIPLE_CHOICE:
+                multiple_choice_count += 1
+            elif question.type == Question.OPEN:
+                open_count += 1
+
+        return single_choice_count, multiple_choice_count, open_count
+
+    def get_pending_terms(self):
+        return [term for term in self.terms if term.status == TestTerm.PENDING]
+
+    def get_active_terms(self):
+        return [term for term in self.terms if term.status == TestTerm.ACTIVE]
+
+    def get_finished_terms(self):
+        return [term for term in self.terms if term.status == TestTerm.FINISHED]
+
 
 class TestTerm(db.Model):
+    PENDING = 0
+    ACTIVE = 1
+    FINISHED = 2
+
     id = db.Column(db.Integer, primary_key=True)
     time = db.Column(db.DateTime)
     code = db.Column(db.Integer)
+    status = db.Column(db.Integer, default=PENDING)
+    creation_date = db.Column(db.DateTime, default=datetime.utcnow)
+    name = db.Column(db.String)
     testid = db.Column(db.Integer, db.ForeignKey('test.id'))
     answers = db.relationship("TestAnswer", backref="term", lazy='select')
+
+    def get_reviewed_answers_count(self):
+        return len([answer for answer in self.answers if answer.reviewed])
 
 
 class TestAnswer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String)
     full_name = db.Column(db.String)
+    reviewed = db.Column(db.Boolean, default=False)
+    grade = db.Column(db.Float, default=0)
     test_term_id = db.Column(db.Integer, db.ForeignKey('test_term.id'))
     answers = db.relationship("QuestionAnswer", backref="test_answer", lazy='select', cascade='all,delete')
 
@@ -68,5 +104,6 @@ class TestAnswer(db.Model):
 class QuestionAnswer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     data = db.Column(db.PickleType)
+    given_points = db.Column(db.Float, default=0)
     test_answer_id = db.Column(db.Integer, db.ForeignKey('test_answer.id'))
     question_id = db.Column(db.Integer, db.ForeignKey('question.id'))

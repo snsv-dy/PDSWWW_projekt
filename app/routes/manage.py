@@ -1,4 +1,4 @@
-from flask import render_template
+from flask import render_template, flash, redirect, url_for
 from flask_login import login_required, current_user
 from app import app
 from app.models import *
@@ -15,6 +15,16 @@ def manage():
 @app.route('/details/<int:test_id>')
 @login_required
 def details(test_id):
-    return render_template('details.html')
+    test = Test.query.filter_by(id=test_id).first()
+
+    if test is None:
+        flash('Żądany test nie istnieje', 'error')
+        return redirect(url_for('index'))
+
+    if test.teacherid != current_user.id:
+        flash('Nie jesteś uprawiony do wglądu w żądany test', 'error')
+        return redirect(url_for('index'))
+
+    return render_template('details.html', test=test)
 
 
