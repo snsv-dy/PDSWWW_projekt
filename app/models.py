@@ -2,6 +2,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from app import db
 from datetime import datetime
+from random import randint
 
 
 class Teacher(db.Model, UserMixin):
@@ -73,13 +74,21 @@ class Test(db.Model):
         return [term for term in self.terms if term.status == TestTerm.FINISHED]
 
 
+def random_term_code():
+    while True:
+        code = randint(100000, 999999)
+        busy = TestTerm.query.filter_by(code=code).first()
+        if not busy:
+            return code
+
+
 class TestTerm(db.Model):
     PENDING = 0
     ACTIVE = 1
     FINISHED = 2
 
     id = db.Column(db.Integer, primary_key=True)
-    code = db.Column(db.Integer)
+    code = db.Column(db.Integer, default=random_term_code)
     status = db.Column(db.Integer, default=PENDING)
     creation_date = db.Column(db.DateTime, default=datetime.utcnow)
     name = db.Column(db.String, default='Brak nazwy')
