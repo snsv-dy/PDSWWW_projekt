@@ -48,7 +48,7 @@ def add_test(teacher):
 
 def add_term(test):
     global next_term
-    term = TestTerm(time=datetime.datetime.now(), code=next_term, name="Termin pierwszy")
+    term = TestTerm(code=next_term, name="Termin pierwszy")
     next_term += 1
     test.terms.append(term)
     db.session.add(term)

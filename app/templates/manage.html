@@ -42,8 +42,8 @@
             </div>
             <!-- Main button section -->
             <div class="button-bar row justify-content-center">
-                <button class="btn btn-secondary"><i class="fas fa-download"></i> Importuj test</button>
-                <button class="btn btn-secondary"><i class="fas fa-plus-circle"></i> Stwórz nowy test</button>
+                <a href="{{ url_for('import_test') }}"><button class="btn btn-secondary"><i class="fas fa-download"></i> Importuj test</button></a>
+                <a href="{{ url_for('quiz_edit_new') }}"><button class="btn btn-secondary"><i class="fas fa-plus-circle"></i> Stwórz nowy test</button></a>
             </div>
         </div>
     </div>

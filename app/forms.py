@@ -29,3 +29,8 @@ class BeforeTestForm(FlaskForm):
     name = StringField('Twoje imie i nazwisko', validators=[DataRequired()])
     email = StringField('Twój adres e-mail', validators=[DataRequired(), EMAIL_VALIDATOR])
     submit = SubmitField('Rozpocznij test')
+
+
+class AddTermForm(FlaskForm):
+    name = StringField('Nazwa terminu', validators=[DataRequired()])
+    submit = SubmitField('Dodaj termin')

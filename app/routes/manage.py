@@ -2,6 +2,7 @@ from flask import render_template, flash, redirect, url_for
 from flask_login import login_required, current_user
 from app import app
 from app.models import *
+from app.forms import AddTermForm
 
 
 @app.route('/manage')
@@ -15,16 +16,80 @@ def manage():
 @app.route('/details/<int:test_id>')
 @login_required
 def details(test_id):
+    check_res = check_test(test_id)
+    if check_res is not None: return check_res
+
+    test = Test.query.filter_by(id=test_id).first()
+    return render_template('details.html', test=test)
+
+
+@app.route('/test/delete/<int:test_id>')
+@login_required
+def delete_test(test_id):
+    check_res = check_test(test_id)
+    if check_res is not None: return check_res
+
+    test = Test.query.filter_by(id=test_id).first()
+    db.session.delete(test)
+    db.session.commit()
+
+    flash('Pomyślnie usunięto test', 'success')
+    return redirect(url_for('manage'))
+
+
+@app.route('/add_term/<int:test_id>', methods=['GET', 'POST'])
+@login_required
+def add_term(test_id):
+    check_res = check_test(test_id)
+    if check_res is not None: return check_res
+
+    form = AddTermForm()
+
+    if form.validate_on_submit():
+        test = Test.query.filter_by(id=test_id).first()
+        term = TestTerm(name=form.name.data)
+        test.terms.append(term)
+        db.session.add(term)
+        db.session.commit()
+
+        flash('Pomyślnie dodano termin', 'success')
+        return redirect(url_for('details', test_id=test_id))
+
+    return render_template('add_term.html', form=form)
+
+
+@app.route('/export/<int:test_id>')
+@login_required
+def export_test(test_id):
+    check_res = check_test(test_id)
+    if check_res is not None: return check_res
+
+    # TODO: Implement exporting test
+
+    flash('Pomyślnie wyeksportowano test', 'success')
+    return redirect(url_for('details', test_id=test_id))
+
+
+@app.route('/import')
+@login_required
+def import_test():
+
+    # TODO: Implement exporting test
+
+    flash('Pomyślnie zaimportowano test', 'success')
+    return redirect(url_for('manage'))
+
+
+def check_test(test_id):
     test = Test.query.filter_by(id=test_id).first()
 
     if test is None:
         flash('Żądany test nie istnieje', 'error')
-        return redirect(url_for('index'))
+        return redirect(url_for('manage'))
 
     if test.teacherid != current_user.id:
-        flash('Nie jesteś uprawiony do wglądu w żądany test', 'error')
-        return redirect(url_for('index'))
+        flash('Nie jesteś uprawiony do tego testu', 'error')
+        return redirect(url_for('manage'))
 
-    return render_template('details.html', test=test)
-
+    return None
 

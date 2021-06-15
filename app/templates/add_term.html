@@ -1,0 +1,25 @@
+{% extends "standard.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block styles %}
+    {{ super() }}
+    <link href="{{ url_for('static',filename='css/login-styles.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<section class="masthead bg-primary text-white text-center">
+    <div class="container d-flex align-items-center flex-column">
+        <h1 class="masthead-heading mb-0">Dodawanie terminu</h1>
+    </div>
+</section>
+
+<section id="login-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-6">
+                {{ wtf.quick_form(form) }}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

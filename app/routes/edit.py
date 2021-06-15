@@ -1,4 +1,5 @@
 from flask import render_template, flash, redirect, url_for, request
+from flask_login import login_required, current_user
 from app import app
 from app.models import *
 
@@ -61,6 +62,18 @@ def update_test_question(form, test_obj):
     db.session.commit()
     db.session.flush()
 
+
+@app.route('/edit/')
+@login_required
+def quiz_edit_new():
+    teacher = current_user
+    test = Test()
+    teacher.tests.append(test)
+    db.session.add(test)
+    db.session.commit()
+    return redirect(url_for('quiz_edit', test_id=test.id))
+
+
 # @login_required
 @app.route('/edit/<int:test_id>')
 @app.route('/edit/<int:test_id>/<int:number>', methods=['POST', 'GET'])
@@ -79,10 +92,7 @@ def quiz_edit(test_id=None, number=None, action=None, param=None):
         return quiz_edit_structure(action, param, test)
 
     if number is None:
-        return redirect('/edit/1/1')
-
-    # if quiz_edit.Test is None:
-    #     quiz_edit.Test = Test.query.filter_by(id=1).first()
+        return redirect(f'/edit/{test_id}/1')
 
     number -= 1
     questions = test.questions
@@ -91,7 +101,6 @@ def quiz_edit(test_id=None, number=None, action=None, param=None):
         number = 0
 
     question = questions[number]
-    # print('eeee', question.data['correct'])
     return render_template('test_edit.html', test_params=test, question=question, number_of_questions=len(test.questions), current_index=number + 1)
 
 

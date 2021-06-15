@@ -42,11 +42,11 @@ class Question(db.Model):
 
 class Test(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    questions = db.relationship("Question", backref="test", lazy='select', order_by='Question.nr')
-    title = db.Column(db.String)
+    questions = db.relationship("Question", backref="test", lazy='select', order_by='Question.nr', cascade='all,delete')
+    title = db.Column(db.String, default="Brak nazwy")
     teacherid = db.Column(db.Integer, db.ForeignKey('teacher.id'))
     creation_date = db.Column(db.DateTime, default=datetime.utcnow)
-    terms = db.relationship("TestTerm", backref="test", lazy='select')
+    terms = db.relationship("TestTerm", backref="test", lazy='select', cascade='all,delete')
 
     def get_questions_count(self):
         single_choice_count = 0
@@ -79,13 +79,12 @@ class TestTerm(db.Model):
     FINISHED = 2
 
     id = db.Column(db.Integer, primary_key=True)
-    time = db.Column(db.DateTime)
     code = db.Column(db.Integer)
     status = db.Column(db.Integer, default=PENDING)
     creation_date = db.Column(db.DateTime, default=datetime.utcnow)
-    name = db.Column(db.String)
+    name = db.Column(db.String, default='Brak nazwy')
     testid = db.Column(db.Integer, db.ForeignKey('test.id'))
-    answers = db.relationship("TestAnswer", backref="term", lazy='select')
+    answers = db.relationship("TestAnswer", backref="term", lazy='select', cascade='all,delete')
 
     def get_reviewed_answers_count(self):
         return len([answer for answer in self.answers if answer.reviewed])

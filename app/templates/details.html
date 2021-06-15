@@ -69,9 +69,9 @@
 
             <!-- Main button section -->
             <div class="button-bar row justify-content-center">
-                <button class="btn btn-secondary"><i class="fas fa-file-export"></i> Eksportuj test</button>
-                <button class="btn btn-secondary"><i class="fas fa-plus-circle"></i> Dodaj termin</button>
-                <button class="btn btn-danger"><i class="fas fa-trash-alt"></i> Usuń test</button>
+                <a href="{{ url_for('export_test', test_id=test.id) }}"><button class="btn btn-secondary"><i class="fas fa-file-export"></i> Eksportuj test</button></a>
+                <a href="{{ url_for('add_term', test_id=test.id) }}"><button class="btn btn-secondary"><i class="fas fa-plus-circle"></i> Dodaj termin</button></a>
+                <a href="{{ url_for('delete_test', test_id=test.id) }}"><button class="btn btn-danger"><i class="fas fa-trash-alt"></i> Usuń test</button></a>
             </div>
 
         </div>
