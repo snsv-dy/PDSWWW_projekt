@@ -23,7 +23,7 @@ def details(test_id):
     return render_template('details.html', test=test)
 
 
-@app.route('/test/delete/<int:test_id>')
+@app.route('/delete_test/<int:test_id>')
 @login_required
 def delete_test(test_id):
     check_res = check_test(test_id)
@@ -56,6 +56,20 @@ def add_term(test_id):
         return redirect(url_for('details', test_id=test_id))
 
     return render_template('add_term.html', form=form)
+
+
+@app.route('/delete_term/<int:term_id>')
+@login_required
+def delete_term(term_id):
+    check_res = check_term(term_id)
+    if check_res is not None: return check_res
+
+    term = TestTerm.query.filter_by(id=term_id).first()
+    db.session.delete(term)
+    db.session.commit()
+
+    flash('Pomyślnie usunięto termin', 'success')
+    return redirect(url_for('details', test_id=term.testid))
 
 
 @app.route('/export/<int:test_id>')
@@ -93,3 +107,16 @@ def check_test(test_id):
 
     return None
 
+
+def check_term(term_id):
+    term = TestTerm.query.filter_by(id=term_id).first()
+
+    if term is None:
+        flash('Żądany termin nie istnieje', 'error')
+        return redirect(url_for('manage'))
+
+    if term.test.teacherid != current_user.id:
+        flash('Nie jesteś uprawiony do tego terminu', 'error')
+        return redirect(url_for('manage'))
+
+    return None
