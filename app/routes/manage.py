@@ -132,6 +132,31 @@ def import_test():
     return redirect(url_for('manage'))
 
 
+@app.route('/answers/<int:term_id>')
+@login_required
+def answers(term_id):
+    check_res = check_term(term_id=term_id)
+    if check_res is not None: return check_res
+
+    term = TestTerm.query.filter_by(id=term_id).first()
+    return render_template('answers.html', term=term)
+
+
+@app.route('/remove_answer/<int:answer_id>')
+@login_required
+def remove_answer(answer_id):
+    check_res = check_answer(answer_id)
+    if check_res is not None: return check_res
+
+    answer = TestAnswer.query.filter_by(id=answer_id).first()
+    term_id = answer.term.id
+    db.session.delete(answer)
+    db.session.commit()
+
+    flash('Pomyślnie usunięto odpowiedź ucznia ' + answer.full_name, 'success')
+    return redirect(url_for('answers', term_id=term_id))
+
+
 def check_test(test_id):
     test = Test.query.filter_by(id=test_id).first()
 
@@ -155,6 +180,20 @@ def check_term(term_id):
 
     if term.test.teacherid != current_user.id:
         flash('Nie jesteś uprawiony do tego terminu', 'error')
+        return redirect(url_for('manage'))
+
+    return None
+
+
+def check_answer(answer_id):
+    answer = TestAnswer.query.filter_by(id=answer_id).first()
+
+    if answer is None:
+        flash('Żądana odpowiedź nie istnieje', 'error')
+        return redirect(url_for('manage'))
+
+    if answer.term.test.teacherid != current_user.id:
+        flash('Nie jesteś uprawiony do oglądania tej odpowiedzi', 'error')
         return redirect(url_for('manage'))
 
     return None

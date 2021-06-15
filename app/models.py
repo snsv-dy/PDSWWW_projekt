@@ -104,10 +104,17 @@ class TestAnswer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String)
     full_name = db.Column(db.String)
+    submit_time = db.Column(db.DateTime, default=datetime.utcnow)
     reviewed = db.Column(db.Boolean, default=False)
     grade = db.Column(db.Float, default=0)
     test_term_id = db.Column(db.Integer, db.ForeignKey('test_term.id'))
     answers = db.relationship("QuestionAnswer", backref="test_answer", lazy='select', cascade='all,delete')
+
+    def get_given_points(self):
+        return sum([answer.given_points for answer in self.answers])
+
+    def get_max_points(self):
+        return sum([question.points for question in self.term.test.questions])
 
 
 class QuestionAnswer(db.Model):

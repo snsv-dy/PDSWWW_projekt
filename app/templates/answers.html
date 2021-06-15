@@ -1,0 +1,55 @@
+{% extends "standard.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% macro render_answer(answer) -%}
+    <tr>
+        <td>{{ answer.full_name }}</td>
+        <td>{{ moment(answer.submit_time).format('LL h:mm') }}</td>
+
+        <td>
+        {% if answer.reviewed %}
+            {{ answer.get_given_points() }} / {{ answer.get_max_points() }}
+        {% else %}
+            Nie oceniono
+        {% endif %}
+        </td>
+
+        <td>
+            <a href="{{ url_for('remove_answer', answer_id=answer.id) }}"><button class="btn btn-primary btn-danger" data-toggle="tooltip" data-placement="top" title="Usuń odpowiedź"><i class="fas fa-trash-alt"></i></button></a>
+        </td>
+    </tr>
+{%- endmacro %}
+
+{% block content %}
+<section class="masthead bg-primary text-white text-center">
+    <div class="container d-flex align-items-center flex-column">
+        <h1 class="masthead-heading mb-0">ODPOWIEDZI</h1>
+        <h3 class="master-subheading mb-0 mt-3">{{ term.test.title }} | {{ term.name }}</h3>
+    </div>
+</section>
+
+<section>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12">
+                <table class="table table-striped text-center mt-5">
+                    <thead>
+                        <tr>
+                            <th>Nazwisko</th>
+                            <th>Data złożenia</th>
+                            <th>Liczba punktów</th>
+                            <th>Akcja</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for answer in term.answers %}
+                            {{ render_answer(answer) }}
+                        {% endfor %}
+                        {% if not term.answers %}<tr><td colspan="4">Brak</td></tr>{% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

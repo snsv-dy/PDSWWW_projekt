@@ -36,7 +36,7 @@
         <td>{{ term.get_reviewed_answers_count() }} / {{ term.answers|length }}</td>
         <td>
             <button class="btn btn-primary mr-1" data-toggle="tooltip" data-placement="top" title="Oceń odpowiedzi"><i class="fas fa-check"></i></button>
-            <button class="btn btn-primary mr-1" data-toggle="tooltip" data-placement="top" title="Przejrzyj odpowiedzi"><i class="fas fa-eye"></i></button>
+            <a href="{{ url_for('answers', term_id=term.id) }}"><button class="btn btn-primary mr-1" data-toggle="tooltip" data-placement="top" title="Przejrzyj odpowiedzi"><i class="fas fa-eye"></i></button></a>
             <a href="{{ url_for('delete_term', term_id=term.id) }}"><button class="btn btn-primary btn-danger" data-toggle="tooltip" data-placement="top" title="Usuń termin"><i class="fas fa-trash-alt"></i></button></a>
         </td>
     </tr>
