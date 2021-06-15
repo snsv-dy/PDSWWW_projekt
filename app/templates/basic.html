@@ -7,6 +7,8 @@
         <meta name="author" content="Jacek Stasiak, Radosław Pluta, Lukasz Klimkiewicz">
         <link rel="shortcut icon" href="{{ url_for('static', filename='images/icon.ico') }}">
         {{ fontawesome_html() }}
+        {{ moment.include_moment(version='2.29.1') }}
+        {{ moment.lang("pl") }}
         <title>Szybki test</title>
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js" crossorigin="anonymous"></script>

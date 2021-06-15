@@ -1,12 +1,15 @@
 from flask import render_template
-from flask_login import login_required
+from flask_login import login_required, current_user
 from app import app
+from app.models import *
 
 
 @app.route('/manage')
 @login_required
 def manage():
-    return render_template('manage.html')
+    teacher = current_user
+    tests = teacher.tests
+    return render_template('manage.html', tests=tests)
 
 
 @app.route('/details/<int:test_id>')

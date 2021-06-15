@@ -1,6 +1,7 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from app import db
+from datetime import datetime
 
 
 class Teacher(db.Model, UserMixin):
@@ -44,6 +45,7 @@ class Test(db.Model):
     questions = db.relationship("Question", backref="test", lazy='select', order_by='Question.nr')
     title = db.Column(db.String)
     teacherid = db.Column(db.Integer, db.ForeignKey('teacher.id'))
+    creation_date = db.Column(db.DateTime, default=datetime.utcnow)
     terms = db.relationship("TestTerm", backref="test", lazy='select')
 
 

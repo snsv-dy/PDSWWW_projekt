@@ -5,6 +5,29 @@
     <link href="{{ url_for('static',filename='css/manage-styles.css') }}" rel="stylesheet">
 {% endblock %}
 
+{% macro render_test_tile(test) -%}
+<div class="col-lg-3 col-md-4 col-sm-6">
+    <div class="card">
+        <div class="file">
+            <a href="{{ url_for('details', test_id=test.id) }}">
+                <div class="hover">
+                    <button type="button" class="btn btn-icon btn-danger">
+                        <i class="fa fa-pen"></i>
+                    </button>
+                </div>
+                <div class="icon">
+                    <i class="fa fa-file fa-8x text-secondary"></i>
+                </div>
+                <div class="file-name">
+                    <p class="m-b-5 text-muted">{{ test.title }}</p>
+                    <small>Liczba Pytań: {{ test.questions|length }}<span class="date text-muted">{{ moment(test.creation_date).fromNow() }}</span></small>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+{%- endmacro %}
+
 {% block content %}
 <section class="page-section masthead bg-primary text-white text-center">
     <!-- File grid section -->
@@ -21,7 +44,6 @@
             <div class="button-bar row justify-content-center">
                 <button class="btn btn-secondary"><i class="fas fa-download"></i> Importuj test</button>
                 <button class="btn btn-secondary"><i class="fas fa-plus-circle"></i> Stwórz nowy test</button>
-                <button class="btn btn-secondary"><i class="fas fa-search"></i> Szukaj</button>
             </div>
         </div>
     </div>
@@ -33,30 +55,9 @@
         <div class="container">
             <!-- Files grid section -->
             <div class="row clearfix">
-
-                <!-- Each file section -->
-                <div class="col-lg-3 col-md-4 col-sm-6">
-                    <div class="card">
-                        <div class="file">
-                            <a href="javascript:void(0);" data-toggle="modal" data-target="#test_1">
-                                <div class="hover">
-                                    <button type="button" class="btn btn-icon btn-danger">
-                                        <i class="fa fa-pen"></i>
-                                    </button>
-                                </div>
-                                <div class="icon">
-                                    <i class="fa fa-file fa-8x text-secondary"></i>
-                                </div>
-                                <div class="file-name">
-                                    <p class="m-b-5 text-muted">Sprawdzian z przyrody</p>
-                                    <small>Liczba Pytań: 7<span class="date text-muted">2 Maj, 2021</span></small>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <!-- End file section -->
-
+                {% for test in tests %}
+                    {{ render_test_tile(test) }}
+                {% endfor %}
             </div>
         </div>
     </div>
