@@ -4,6 +4,7 @@ from app import app
 from app.models import *
 from app.util import *
 from app.forms import AddTermForm
+from app.email import send_email
 
 
 @app.route('/manage')
@@ -22,6 +23,16 @@ def details(test_id):
 
     test = Test.query.filter_by(id=test_id).first()
     return render_template('details.html', test=test)
+
+
+@app.route('/preview/<int:test_id>')
+@login_required
+def test_preview(test_id):
+    check_res = check_test(test_id)
+    if check_res is not None: return check_res
+
+    test = Test.query.filter_by(id=test_id).first()
+    return render_template('preview.html', test=test)
 
 
 @app.route('/delete_test/<int:test_id>')
@@ -107,6 +118,9 @@ def finish_term(term_id):
     term.auto_review_closed_questions()
     term.status = TestTerm.FINISHED
     db.session.commit()
+
+    for answer in term.reviewed_answers:
+        send_email(answer.email, 'Wyniki', 'test_result', answer=answer)
 
     flash('Pomyślnie zakończono termin', 'success')
     return redirect(url_for('details', test_id=term.testid))

@@ -27,7 +27,7 @@ def add_test(teacher):
     teacher.tests.append(test)
     db.session.add(test)
 
-    q1 = Question(nr=1, question='Z jakich części składa się cep?', points=4, image=['baked_salmon.webp', 'jupiter.jpg'], type=Question.MULTIPLE_CHOICE, data={'all': ['Długi kij', 'Krótki kijek' 'Kawałek sznurka', 'Skrzynia biegów', 'Sprężarka', 'Spust', 'hehe'], 'correct': [0, 1, 2]})
+    q1 = Question(nr=1, question='Z jakich części składa się cep?', points=4, image=['baked_salmon.webp', 'jupiter.jpg'], type=Question.MULTIPLE_CHOICE, data={'all': ['Długi kij', 'Krótki kijek', 'Kawałek sznurka', 'Skrzynia biegów', 'Sprężarka', 'Spust', 'hehe'], 'correct': [0, 1, 2]})
     test.questions.append(q1)
     db.session.add(q1)
 
@@ -39,7 +39,6 @@ def add_test(teacher):
     test.questions.append(q3)
     db.session.add(q3)
 
-    # for i in range(5):
     for i in range(1):
         add_term(test)
 

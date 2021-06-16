@@ -1,0 +1,75 @@
+{% extends "basic.html" %}
+
+{% block styles %}
+    {{ super() }}
+    <link href="{{ url_for('static',filename='css/manage-styles.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% macro render_question(question) -%}
+<div class="card mb-3">
+  <div class="card-header bg-secondary text-white">
+      Pytanie {{ question.nr }} | {{ question.points }} pkt. |
+      {% if question.type == question.OPEN %}otwarte{% elif question.type == question.SINGLE_CHOICE %}wybór jednokrotny{% else %}wybór wielokrotny{% endif %}
+  </div>
+  <div class="card-body">
+      <p>Treść pytania: {{ question.question }}</p>
+      {% if question.type == question.SINGLE_CHOICE %}
+      <p>Odpowiedzi:</p>
+      <ul>
+      {% for option in question.data['all'] %}
+          <li class="{% if loop.index-1 == question.data['correct'] %}text-success{% endif %}">{{ option }}</li>
+      {% endfor %}
+      </ul>
+      {% elif question.type == question.MULTIPLE_CHOICE %}
+      <p>Odpowiedzi:</p>
+      <ul>
+      {% for option in question.data['all'] %}
+          <li class="{% if loop.index-1 in question.data['correct'] %}text-success{% endif %}">{{ option }}</li>
+      {% endfor %}
+      </ul>
+      {% endif %}
+  </div>
+</div>
+{%- endmacro %}
+
+{% block content %}
+<section class="page-section masthead bg-primary text-white text-center">
+    <!-- File grid section -->
+    <div class="file_manager">
+        <div class="container">
+
+            <!-- Title & Divider section -->
+            <h1 class="masthead-heading text-center text-uppercase mb-0">Podgląd pytań</h1>
+            <h3 class="text-center text-uppercase mb-0 mt-3">{{ test.title }}</h3>
+
+            <!-- Test stats section -->
+            <div class="stats">
+                <div class="icon" data-toggle="tooltip" data-placement="top" title="Pytania wielokrotnego wyboru">
+                    <i class="fas fa-tasks fa-2x text-secondary"></i>
+                    <p class="masthead-subheading font-weight-light mb-0">{{ test.get_questions_count()[1] }}</p>
+                </div>
+                <div class="icon" data-toggle="tooltip" data-placement="top" title="Pytania jednokrotnego wyboru">
+                    <i class="fas fa-list-ul fa-2x text-secondary"></i>
+                    <p class="masthead-subheading font-weight-light mb-0">{{ test.get_questions_count()[0] }}</p>
+                </div>
+                <div class="icon" data-toggle="tooltip" data-placement="top" title="Pytania otwarte">
+                    <i class="fas fa-edit fa-2x text-secondary"></i>
+                    <p class="masthead-subheading font-weight-light mb-0">{{ test.get_questions_count()[2] }}</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<div class="page-section">
+
+    <h3 class="masthead-subheading text-center text-uppercase mb-3">Pytania</h3>
+    <div class="col-12 mt-3 mb-5">
+        {% for question in test.questions %}
+            {{ render_question(question) }}
+        {% endfor %}
+    </div>
+
+</div>
+{% endblock %}
