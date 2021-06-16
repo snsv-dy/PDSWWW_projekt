@@ -4,8 +4,6 @@ from app.models import *
 import datetime
 
 
-next_term = 1000
-
 def initialize():
 
     if Teacher.query.first() is not None:
@@ -47,9 +45,7 @@ def add_test(teacher):
 
 
 def add_term(test):
-    global next_term
-    term = TestTerm(code=next_term, name="Termin pierwszy")
-    next_term += 1
+    term = TestTerm(name="Termin pierwszy")
     test.terms.append(term)
     db.session.add(term)
 

@@ -72,6 +72,8 @@ def review_post(answer_id):
         question_answer.reviewed = True
     db.session.commit()
 
+    send_email(answer.email, 'Wyniki', 'test_result', answer=answer)
+
     flash('Praca została oceniona', 'success')
 
     back = request.args.get('back', default=0)
