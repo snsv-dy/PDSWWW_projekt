@@ -8,10 +8,11 @@
   <div class="card-body">
       <p>Treść pytania: {{ answer.question.question }}</p>
       <p>Odpowiedź ucznia: {{ render_answer_answer(answer) }}</p>
-      {% if answer.is_reviewed() %}
-        <p>Liczba punktów: {{ answer.given_points }} / {{ answer.question.points }}</p>
+      {% if answer.reviewed %}
+          <p>Liczba punktów: {{ answer.given_points }} / {{ answer.question.points }}</p>
+          <p class="text-success">{% if answer.question.type == answer.question.OPEN %}Oceniono ręcznie{% else %}Oceniono automatycznie{% endif %}</p>
       {% else %}
-        <p class="text-danger">Pytanie wymaga oceny</p>
+        <p class="text-danger">Pytanie wymaga ręcznej oceny</p>
       {% endif %}
   </div>
 </div>
@@ -41,6 +42,7 @@
     </div>
         <!-- Main button section -->
     <div class="button-bar row justify-content-center">
+        {% if not answer.reviewed %}<a href="{{ url_for('review_answer', answer_id=answer.id, back=2) }}"><button class="btn btn-secondary mt-3 mr-2"><i class="fas fa-check"></i> Oceń odpowiedź</button></a>{% endif %}
         <a href="{{ url_for('remove_answer', answer_id=answer.id) }}" class="mt-3"><button class="btn btn-danger"><i class="fas fa-trash-alt"></i> Usuń odpowiedź</button></a>
     </div>
 </section>
@@ -60,7 +62,7 @@
                       <p>Nazwisko ucznia: {{ answer.full_name }}</p>
                       <p>Email ucznia: {{ answer.email }}</p>
                       <p>Data złożenia: {{ moment(answer.submit_time).format('LL h:mm') }}</p>
-                      <p>Liczba punktów: {% if answer.reviewed %}{{ answer.get_given_points() }} / {{ answer.get_max_points() }}{% else %}<span class="text-danger">nie oceniono</span>{% endif %}</p>
+                      <p>Liczba punktów: {% if answer.reviewed %}{{ answer.given_points }} / {{ answer.max_points }}{% else %}<span class="text-danger">nie oceniono</span>{% endif %}</p>
                       <p>Ocena: {% if answer.reviewed %}{{ answer.grade }}{% else %}<span class="text-danger">nie oceniono</span>{% endif %}</p>
                   </div>
                 </div>

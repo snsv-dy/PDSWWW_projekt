@@ -1,0 +1,75 @@
+{% extends "standard.html" %}
+
+{% macro render_answer(answer) -%}
+<li class="row align-items-center list-group-item d-flex justify-content-between align-items-start" style="background-color: lightgray">
+<div class="col-sm-12 col-md-8">
+	<p>{{ answer.question.nr }}. {{ answer.question.question }}</p>
+	<p><b>Odpowiedź:</b> {{ answer.data }}</p>
+</div>
+<div class="col-sm-12 col-md-4">
+	<div class="input-group">
+		<input name="{{answer.question.nr}}" type="text" class="form-control" placeholder="Liczba punktów" autocomplete="off" value="0">
+		<div class="input-group-append">
+		  <span class="input-group-text bg-secondary text-white"> / {{ answer.question.points }}</span>
+		</div>
+	</div>
+</div>
+</li>
+{%- endmacro %}
+
+{% block styles %}
+    {{ super() }}
+    <link href="{{ url_for('static',filename='css/index-styles.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static',filename='css/test-styles.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<form action="" method="post" autocomplete="off">
+	<section class="masthead bg-primary text-white text-center">
+		<div class="container d-flex align-items-center flex-column">
+			<!-- Test title -->
+			<h1 class="masthead-heading mb-0">Ocenianie odpowiedzi</h1>
+
+			<div class="row align-items-center py-4">
+
+				<!-- Student info -->
+				<div class="col-sm-12 col-md-4 text-center">
+					<table class="table-sm text-left d-inline-block">
+						<tr>
+							<td><b>Email: </b></td>
+							<td>{{ answer.email }}</td>
+						</tr>
+						<tr>
+							<td><b>Nazwisko: </b></td>
+							<td>{{ answer.full_name }}</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+
+			<!-- Main button section -->
+			<div class="button-bar row justify-content-center">
+				<input type="submit" class="btn btn-secondary align-self-baseline" value="Zakończ sprawdzanie">
+			</div>
+		</div>
+	</section>
+
+	<section>
+		<div class="container pt-5 pb-5">
+			<!-- Anwsers -->
+			<ol class="list-group list-group-numbered bg-secondary">
+				<li class="row list-group-item d-flex justify-content-between align-items-start bg-secondary text-white">
+					<div class="col-8"><h4>Pytania i odpowiedzi</h4></div>
+					<div class="col-4"><h4>Punktacja</h4></div>
+				</li>
+				{% for answer in answer.open_answers %}
+					{{ render_answer(answer) }}
+				{% endfor %}
+			</ol>
+		</div>
+	</section>
+</form>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

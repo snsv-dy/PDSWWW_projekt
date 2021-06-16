@@ -2,6 +2,7 @@ from flask import render_template, flash, redirect, url_for
 from flask_login import login_required, current_user
 from app import app
 from app.models import *
+from app.util import *
 from app.forms import AddTermForm
 
 
@@ -103,6 +104,7 @@ def finish_term(term_id):
         flash('Terminu nie można zakończyć', 'error')
         return redirect(url_for('details', test_id=term.testid))
 
+    term.auto_review_closed_questions()
     term.status = TestTerm.FINISHED
     db.session.commit()
 
@@ -126,7 +128,7 @@ def export_test(test_id):
 @login_required
 def import_test():
 
-    # TODO: Implement exporting test
+    # TODO: Implement importing test
 
     flash('Pomyślnie zaimportowano test', 'success')
     return redirect(url_for('manage'))
@@ -167,43 +169,3 @@ def answer(answer_id):
     return render_template('answer.html', answer=answer)
 
 
-def check_test(test_id):
-    test = Test.query.filter_by(id=test_id).first()
-
-    if test is None:
-        flash('Żądany test nie istnieje', 'error')
-        return redirect(url_for('manage'))
-
-    if test.teacherid != current_user.id:
-        flash('Nie jesteś uprawiony do tego testu', 'error')
-        return redirect(url_for('manage'))
-
-    return None
-
-
-def check_term(term_id):
-    term = TestTerm.query.filter_by(id=term_id).first()
-
-    if term is None:
-        flash('Żądany termin nie istnieje', 'error')
-        return redirect(url_for('manage'))
-
-    if term.test.teacherid != current_user.id:
-        flash('Nie jesteś uprawiony do tego terminu', 'error')
-        return redirect(url_for('manage'))
-
-    return None
-
-
-def check_answer(answer_id):
-    answer = TestAnswer.query.filter_by(id=answer_id).first()
-
-    if answer is None:
-        flash('Żądana odpowiedź nie istnieje', 'error')
-        return redirect(url_for('manage'))
-
-    if answer.term.test.teacherid != current_user.id:
-        flash('Nie jesteś uprawiony do oglądania tej odpowiedzi', 'error')
-        return redirect(url_for('manage'))
-
-    return None

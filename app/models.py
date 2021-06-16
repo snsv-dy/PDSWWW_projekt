@@ -74,6 +74,9 @@ class Test(db.Model):
     def get_finished_terms(self):
         return [term for term in self.terms if term.status == TestTerm.FINISHED]
 
+    def get_question_by_nr(self, nr):
+        return [question for question in self.questions if question.nr == nr][0]
+
 
 def random_term_code():
     while True:
@@ -96,8 +99,17 @@ class TestTerm(db.Model):
     testid = db.Column(db.Integer, db.ForeignKey('test.id'))
     answers = db.relationship("TestAnswer", backref="term", lazy='select', cascade='all,delete')
 
-    def get_reviewed_answers_count(self):
-        return len([answer for answer in self.answers if answer.reviewed])
+    @property
+    def reviewed_answers(self):
+        return [answer for answer in self.answers if answer.reviewed]
+
+    @property
+    def not_reviewed_answers(self):
+        return [answer for answer in self.answers if not answer.reviewed]
+
+    def auto_review_closed_questions(self):
+        for answer in self.answers:
+            answer.auto_review_closed_questions()
 
 
 class TestAnswer(db.Model):
@@ -105,24 +117,79 @@ class TestAnswer(db.Model):
     email = db.Column(db.String)
     full_name = db.Column(db.String)
     submit_time = db.Column(db.DateTime, default=datetime.utcnow)
-    reviewed = db.Column(db.Boolean, default=False)
-    grade = db.Column(db.Float, default=0)
     test_term_id = db.Column(db.Integer, db.ForeignKey('test_term.id'))
     answers = db.relationship("QuestionAnswer", backref="test_answer", lazy='select', cascade='all,delete')
 
-    def get_given_points(self):
+    @property
+    def given_points(self):
         return sum([answer.given_points for answer in self.answers])
 
-    def get_max_points(self):
+    @property
+    def max_points(self):
         return sum([question.points for question in self.term.test.questions])
+
+    @property
+    def reviewed(self):
+        # TestAnswer is reviewed if all QuestionAnswer are reviewed
+        return all([answer.reviewed for answer in self.answers])
+
+    @property
+    def open_answers(self):
+        return [answer for answer in self.answers if answer.question.type == Question.OPEN]
+
+    @property
+    def grade(self):
+        percent = self.given_points / self.max_points * 100
+        if percent >= 90: return 5
+        elif percent >= 75: return 4
+        elif percent >= 50: return 3
+        elif percent >= 30: return 2
+        else: return 1
+
+    def get_answer_by_nr(self, nr):
+        return [answer for answer in self.answers if answer.question.nr == nr][0]
+
+    def auto_review_closed_questions(self):
+        for answer in self.answers:
+            answer.auto_review()
 
 
 class QuestionAnswer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     data = db.Column(db.PickleType)
+    reviewed = db.Column(db.Boolean, default=False)
     given_points = db.Column(db.Float, default=0)
     test_answer_id = db.Column(db.Integer, db.ForeignKey('test_answer.id'))
     question_id = db.Column(db.Integer, db.ForeignKey('question.id'))
 
-    def is_reviewed(self):
-        return self.test_answer.reviewed or self.question.type != Question.OPEN
+    def auto_review(self):
+        if self.question.type != Question.OPEN:
+            self.given_points = self.calc_points()
+            self.reviewed = True
+            db.session.add(self)
+            db.session.commit()
+
+    def calc_points(self):
+        if self.question.type == Question.SINGLE_CHOICE:
+            correct = self.question.data['correct']
+            provided = self.data
+            return self.question.points if provided == correct else 0
+    
+        elif self.question.type == Question.MULTIPLE_CHOICE:
+            correct = self.question.data['correct']
+            provided = self.data
+    
+            points_per_option = self.question.points / len(correct)
+            points = 0
+            for option in provided:
+                if option in correct:
+                    points += points_per_option
+                else:
+                    points -= points_per_option
+    
+            points = max(points, 0)
+            points = round(points * 2) / 2
+            return points
+    
+        else:
+            return 0

@@ -2,113 +2,82 @@ from flask import render_template, flash, redirect, url_for, request
 from flask_login import login_required
 from app import app
 from app.models import *
+from app.util import *
 from app.email import send_email
 
 
-@app.route('/review/<int:term_id>/<int:answer_nr>')
+@app.route('/review/term/<int:term_id>')
 @login_required
-def quiz_review(term_id, answer_nr):
+def review_term(term_id):
+    check_res = check_term(term_id=term_id)
+    if check_res is not None: return check_res
+
     term = TestTerm.query.filter_by(id=term_id).first()
 
-    if term is None:
-        flash('Nieprawidłowy termin testu', 'error')
-        return redirect(url_for('index'))
+    if not term.not_reviewed_answers:
+        flash('Nie ma żadnej pracy do sprawdzenia', 'success')
+        return redirect(url_for('details', test_id=term.test.id))
 
-    if answer_nr > len(term.answers) or answer_nr <= 0:
-        flash('Nie ma takiej pracy do sprawdzenia', 'error')
-        return redirect(url_for('index'))
-
-    answer = term.answers[answer_nr-1]
-    return render_template('test_review.html', answer=answer, answer_nr=answer_nr, term_id=term_id, calc_points=calc_points)
+    return redirect(url_for('review_answer', answer_id=term.not_reviewed_answers[0].id))
 
 
-def calc_points(question_answer):
-    qa = question_answer
-
-    if qa.question.type == Question.SINGLE_CHOICE:
-        correct = qa.question.data['correct']
-        provided = qa.data
-        return qa.question.points if provided == correct else 0
-
-    if qa.question.type == Question.MULTIPLE_CHOICE:
-        correct = qa.question.data['correct']
-        provided = qa.data
-
-        points_per_option = qa.question.points / len(correct)
-        print(correct, provided)
-        points = 0
-        for option in provided:
-            if option in correct:
-                points += points_per_option
-            else:
-                points -= points_per_option
-
-        points = max(points, 0)
-        points = round(points * 2) / 2
-        return points
-
-    if qa.question.type == Question.OPEN:
-        return 0
-
-
-@app.route('/review/<int:term_id>/<int:answer_nr>', methods=['POST'])
+@app.route('/review/answer/<int:answer_id>')
 @login_required
-def quiz_review_post(term_id, answer_nr):
-    term = TestTerm.query.filter_by(id=term_id).first()
+def review_answer(answer_id):
+    check_res = check_answer(answer_id)
+    if check_res is not None: return check_res
 
-    if term is None:
-        flash('Nieprawidłowy termin testu', 'error')
-        return redirect(url_for('index'))
+    answer = TestAnswer.query.filter_by(id=answer_id).first()
 
-    if answer_nr > len(term.answers) or answer_nr <= 0:
-        flash('Nie ma takiej pracy do sprawdzenia', 'error')
-        return redirect(url_for('index'))
+    if answer.reviewed:
+        flash('Ta praca jest już oceniona', 'error')
+        return redirect(url_for('manage'))
 
-    answer = term.answers[answer_nr - 1]
+    return render_template('review.html', answer=answer, answer_nr=1, term_id=answer.term.id)
 
-    valid = True
 
-    points = {}
-    grade = 0
+@app.route('/review/answer/<int:answer_id>', methods=['POST'])
+@login_required
+def review_post(answer_id):
+    check_res = check_answer(answer_id)
+    if check_res is not None: return check_res
+
+    answer = TestAnswer.query.filter_by(id=answer_id).first()
 
     form = request.form
+    valid = True
+    points = {}
+
+    # Validate
     try:
         for field in form.keys():
-            if field == 'grade':
-                grade = float(form['grade'])
-                if 1 < grade > 5:
-                    valid = False
-                    break
-            else:
-                question_nr = int(field)
-                max_points = answer.answers[question_nr-1].question.points
-                provided_points = float(form[field])
-                points[question_nr] = provided_points
-                if provided_points > max_points:
-                    valid = False
-                    break
+            question_nr = int(field)
+            max_points = answer.get_answer_by_nr(question_nr).question.points
+            provided_points = float(form[field])
+            points[question_nr] = provided_points
+            if not 0 <= provided_points <= max_points:
+                valid = False
+                break
     except ValueError:
         valid = False
 
     if not valid:
         flash('Niepoprawne dane', 'error')
-        return redirect(url_for('quiz_review', term_id=term_id, answer_nr=answer_nr))
+        return redirect(url_for('review_answer', answer_id=answer_id, back=request.args.get('back', default=0)))
 
-    scored_points = sum(points.values())
-    max_points = sum([answer.question.points for answer in answer.answers])
-
-    send_email('social.insight.noreply@gmail.com', 'Wyniki', 'test_result', grade=grade, points=points, answer=answer,
-               scored_points=scored_points, max_points=max_points)
-
-    db.session.delete(answer)
+    # Update DB
+    for question_nr in points.keys():
+        question_answer = answer.get_answer_by_nr(question_nr)
+        question_answer.given_points = points[question_nr]
+        question_answer.reviewed = True
     db.session.commit()
 
-    next_answer_nr = answer_nr
-    if next_answer_nr > len(term.answers):
-        next_answer_nr -= 1
+    flash('Praca została oceniona', 'success')
 
-    if next_answer_nr == 0:
-        flash('Wszystkie testy w tym terminie zostały już sprawdzone', 'success')
-        return redirect(url_for('manage'))
-
-    return redirect(url_for('quiz_review', term_id=term_id, answer_nr=next_answer_nr))
+    back = request.args.get('back', default=0)
+    if back == '1':
+        return redirect(url_for('answers', term_id=answer.term.id))
+    elif back == '2':
+        return redirect(url_for('answer', answer_id=answer_id))
+    else:
+        return redirect(url_for('review_term', term_id=answer.term.id))
