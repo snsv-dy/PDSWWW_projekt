@@ -157,6 +157,16 @@ def remove_answer(answer_id):
     return redirect(url_for('answers', term_id=term_id))
 
 
+@app.route('/answer/<int:answer_id>')
+@login_required
+def answer(answer_id):
+    check_res = check_answer(answer_id)
+    if check_res is not None: return check_res
+
+    answer = TestAnswer.query.filter_by(id=answer_id).first()
+    return render_template('answer.html', answer=answer)
+
+
 def check_test(test_id):
     test = Test.query.filter_by(id=test_id).first()
 

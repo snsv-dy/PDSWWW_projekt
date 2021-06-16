@@ -31,7 +31,7 @@ class Question(db.Model):
     OPEN = 2
 
     id = db.Column(db.Integer, primary_key=True)
-    nr = db.Column(db.Integer)
+    nr = db.Column(db.Integer)  # Nr pytania: 1, 2, 3 itd
     question = db.Column(db.String)
     points = db.Column(db.Float)
     image = db.Column(db.PickleType)
@@ -123,3 +123,6 @@ class QuestionAnswer(db.Model):
     given_points = db.Column(db.Float, default=0)
     test_answer_id = db.Column(db.Integer, db.ForeignKey('test_answer.id'))
     question_id = db.Column(db.Integer, db.ForeignKey('question.id'))
+
+    def is_reviewed(self):
+        return self.test_answer.reviewed or self.question.type != Question.OPEN

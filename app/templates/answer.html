@@ -1,0 +1,82 @@
+{% extends "standard.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+
+{% macro render_answer(answer) -%}
+<div class="card mb-3">
+  <div class="card-header bg-secondary text-white">Pytanie {{ answer.question.nr }}</div>
+  <div class="card-body">
+      <p>Treść pytania: {{ answer.question.question }}</p>
+      <p>Odpowiedź ucznia: {{ render_answer_answer(answer) }}</p>
+      {% if answer.is_reviewed() %}
+        <p>Liczba punktów: {{ answer.given_points }} / {{ answer.question.points }}</p>
+      {% else %}
+        <p class="text-danger">Pytanie wymaga oceny</p>
+      {% endif %}
+  </div>
+</div>
+{%- endmacro %}
+
+
+{% macro render_answer_answer(answer) -%}
+	{% if answer.question.type == 1 %}
+		{{ answer.question.data['all'][answer.data] }}
+	{% elif answer.question.type == 0 %}
+        <ul>
+        {% for index in answer.data %}
+            <li>{{ answer.question.data['all'][index] }}</li>
+        {% endfor %}
+        </ul>
+	{% elif answer.question.type == 2 %}
+		{{ answer.data }}
+	{% endif %}
+{%- endmacro %}
+
+
+{% block content %}
+<section class="masthead pb-5 bg-primary text-white text-center">
+    <div class="container d-flex flex-column">
+        <h1 class="masthead-heading mb-3">ODPOWIEDŹ</h1>
+        {{ answer.full_name }}</br>
+    </div>
+        <!-- Main button section -->
+    <div class="button-bar row justify-content-center">
+        <a href="{{ url_for('remove_answer', answer_id=answer.id) }}" class="mt-3"><button class="btn btn-danger"><i class="fas fa-trash-alt"></i> Usuń odpowiedź</button></a>
+    </div>
+</section>
+
+<section>
+    <div class="container">
+        <div class="row justify-content-center">
+
+            <div class="col-12 text-center mt-5">
+                <h1 class="page-section-heading text-secondary mb-0 d-inline-block text-uppercase">Podstawowe informajce</h1>
+            </div>
+
+            <div class="col-12 mt-3 mb-5">
+                <div class="card mb-3">
+                  <div class="card-header bg-secondary text-white">Podstawowe informacje</div>
+                  <div class="card-body">
+                      <p>Nazwisko ucznia: {{ answer.full_name }}</p>
+                      <p>Email ucznia: {{ answer.email }}</p>
+                      <p>Data złożenia: {{ moment(answer.submit_time).format('LL h:mm') }}</p>
+                      <p>Liczba punktów: {% if answer.reviewed %}{{ answer.get_given_points() }} / {{ answer.get_max_points() }}{% else %}<span class="text-danger">nie oceniono</span>{% endif %}</p>
+                      <p>Ocena: {% if answer.reviewed %}{{ answer.grade }}{% else %}<span class="text-danger">nie oceniono</span>{% endif %}</p>
+                  </div>
+                </div>
+            </div>
+
+            <div class="col-12 text-center mt-4">
+                <h1 class="page-section-heading text-secondary mb-0 d-inline-block text-uppercase">Pytania</h1>
+            </div>
+
+            <div class="col-12 mt-3 mb-5">
+                {% for answer in answer.answers %}
+                    {{ render_answer(answer) }}
+                {% endfor %}
+                {% if not answer.answers %}<tr><td colspan="3">Brak</td></tr>{% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

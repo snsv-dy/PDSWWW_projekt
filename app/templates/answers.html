@@ -10,11 +10,18 @@
         {% if answer.reviewed %}
             {{ answer.get_given_points() }} / {{ answer.get_max_points() }}
         {% else %}
-            Nie oceniono
+            <span class="text-danger">Nie oceniono</span>
         {% endif %}
         </td>
 
         <td>
+        {% if answer.reviewed %}
+            {{ answer.grade }}
+        {% endif %}
+        </td>
+
+        <td>
+            <a href="{{ url_for('answer', answer_id=answer.id) }}"><button class="btn btn-primary mr-1" data-toggle="tooltip" data-placement="top" title="Pokaż szczegóły"><i class="fas fa-eye"></i></button></a>
             <a href="{{ url_for('remove_answer', answer_id=answer.id) }}"><button class="btn btn-primary btn-danger" data-toggle="tooltip" data-placement="top" title="Usuń odpowiedź"><i class="fas fa-trash-alt"></i></button></a>
         </td>
     </tr>
@@ -38,6 +45,7 @@
                             <th>Nazwisko</th>
                             <th>Data złożenia</th>
                             <th>Liczba punktów</th>
+                            <th>Ocena</th>
                             <th>Akcja</th>
                         </tr>
                     </thead>
