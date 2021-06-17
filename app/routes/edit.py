@@ -11,7 +11,7 @@ def quiz_edit_structure(action, param, test_obj):
         question = Question(type=int(param), question='', points=1.0, data=None, nr=len(test_obj.questions))
 
         if param in ['0', '1']:
-            data = {'all': [], 'correct': []}
+            question.data = {'all': [''], 'correct': [] if param == '0' else -1}
 
         test_obj.questions.append(question)
         db.session.add(question)
@@ -68,7 +68,7 @@ def update_test_question(form, test_obj):
 @login_required
 def quiz_edit_new():
     teacher = current_user
-    test = Test()
+    test = Test(title="Nowy test")
     teacher.tests.append(test)
     db.session.add(test)
     db.session.commit()

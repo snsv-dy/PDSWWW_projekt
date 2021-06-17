@@ -113,7 +113,7 @@ def quiz_end():
     if session.get('answer_id') is not None:
         answer_obj = TestAnswer().query.filter_by(id=session['answer_id']).first()
         del session['answer_id']
-    return redirect(url_for('summary'))
+    return redirect(url_for('summary', term_id=answer_obj.test_term_id))
 
 
 @app.route('/summary/<int:term_id>')
