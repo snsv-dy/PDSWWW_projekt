@@ -1,4 +1,4 @@
-from flask import render_template, flash, redirect, url_for, request
+from flask import render_template, flash, redirect, url_for, request, session
 from flask_login import login_required, current_user
 from app import app
 from app.models import *
@@ -72,6 +72,7 @@ def quiz_edit_new():
     teacher.tests.append(test)
     db.session.add(test)
     db.session.commit()
+    session['editing_id'] = test.id
     return redirect(url_for('quiz_edit', test_id=test.id))
 
 
@@ -86,10 +87,14 @@ def quiz_edit(test_id=None, number=None, action=None, param=None):
 
     test = Test.query.filter_by(id=test_id).first()
 
-    if len(request.form) > 0:
+    editable = session.get('editing_id')
+    if not editable:
+        return redirect(url_for('test_preview', test_id=test.id))
+
+    if len(request.form) > 0 and editable:
         update_test_question(request.form, test)
 
-    if action is not None and param is not None:
+    if action is not None and param is not None and editable:
         return quiz_edit_structure(action, param, test)
 
     if number is None:
@@ -105,7 +110,10 @@ def quiz_edit(test_id=None, number=None, action=None, param=None):
     if len(questions) > 0:
         question = questions[number]
 
-    return render_template('test_edit.html', test_params=test, question=question, number_of_questions=len(test.questions), current_index=number + 1)
+    if not editable:
+        flash('Tryb podglądu, zmiany nie zostaną zapisane.', 'warning')
+
+    return render_template('test_edit.html', test_params=test, question=question, number_of_questions=len(test.questions), current_index=number + 1, editable=editable)
 
 
 

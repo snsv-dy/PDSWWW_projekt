@@ -1,4 +1,4 @@
-from flask import render_template, flash, redirect, url_for
+from flask import render_template, flash, redirect, url_for, session
 from flask_login import login_required, current_user
 from app import app
 from app.models import *
@@ -6,10 +6,14 @@ from app.util import *
 from app.forms import AddTermForm
 from app.email import send_email
 
+def reset_edited():
+    if session.get('editing_id') is not None:
+        del session['editing_id']
 
 @app.route('/manage')
 @login_required
 def manage():
+    reset_edited()
     teacher = current_user
     tests = teacher.tests
     return render_template('manage.html', tests=tests)
