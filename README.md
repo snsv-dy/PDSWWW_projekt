@@ -1,4 +1,7 @@
 # Szybki test
+
+[szybki-test.herokuapp.com](https://szybki-test.herokuapp.com/)
+
 Projekt na zaliczenie części labolatoryjnej z przedmiotu Projektowanie Dynamicznych Stron WWW.
 
 ## Uruchamianie
