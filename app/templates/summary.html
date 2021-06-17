@@ -1,0 +1,23 @@
+{% extends "standard.html" %}
+
+{% block styles %}
+    {{ super() }}
+    <link href="{{ url_for('static',filename='css/before-test-styles.css') }}" rel="stylesheet">
+{% endblock %}
+
+
+{% block content %}
+<section class="page-section">
+    <div class="before-test center-block text-center">
+        <h1 class="masthead-heading text-uppercase mb-0">{{ term.test.title }}</h1>
+        <h4 class="masthead-subheading mb-0 text-muted">{{ term.name }}</h4>
+        <div class="divider-custom">
+            <div class="divider-custom-line"></div>
+            <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
+            <div class="divider-custom-line"></div>
+        </div>
+        <p style="font-size: 20px;">Wynik zostanie przesłany na Twój adres email gdy termin testu się zakończy</p>
+        <a href="{{url_for('index')}}"><i class="fas fa-home fa-5x text-secondary mt-5"></i></br>Powrót do strony głównej</a>
+    </div>
+</section>
+{% endblock %}

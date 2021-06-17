@@ -113,9 +113,17 @@ def quiz_end():
     if session.get('answer_id') is not None:
         answer_obj = TestAnswer().query.filter_by(id=session['answer_id']).first()
         del session['answer_id']
-    return redirect('/test_summary')
+    return redirect(url_for('summary'))
 
 
-@app.route('/test_summary')
-def test_summary():
-    return render_template('test_summary.html')
+@app.route('/summary/<int:term_id>')
+def summary(term_id):
+    flash('Test zakończony', 'success')
+
+    term = TestTerm.query.filter_by(id=term_id).first()
+
+    if term is None:
+        flash('Żądany termin nie istnieje', 'error')
+        return redirect(url_for('index'))
+
+    return render_template('summary.html', term=term)
