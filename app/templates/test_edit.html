@@ -49,6 +49,7 @@
 		</div>
 	</div> 
 
+	{% if number_of_questions > 0 %}
 	<!-- Question score -->
 	<div class="row">
 		<h3 class="col-sm-6">Pytanie {{ current_index }}</h3>
@@ -73,7 +74,7 @@
 								<div class="input-group mb-3">
 									<div class="input-group-prepend">
 									  <div class="input-group-text">
-										<input type="{{ 'checkbox' if question.type == 0 else 'radio' }}" name="answer" value={{ loop.index - 1}} {{'checked' if question.data['correct'] and ((question.type == 0 and (loop.index - 1) in question.data['correct']) or (question.type == 1 and loop.index - 1 == question.data['correct'])) }}> 
+										<input type="{{ 'checkbox' if question.type == 0 else 'radio' }}" name="answer" value={{ loop.index - 1}} {{'checked' if ((question.type == 0 and (loop.index - 1) in question.data['correct']) or (question.type == 1 and (loop.index - 1) == question.data['correct'])) }}> 
 									  </div>
 									</div>
 									<input type="text" class="form-control" name="anwser_text" placeholder="Odpowiedź" value="{{ anwser }}">
@@ -128,6 +129,7 @@
 			<a class="btn btn-primary" href="#">Dodaj obraz</a>
 		</div>
 	</div>
+	{% endif %}
 </section>
 
 <!-- Bottom controls -->

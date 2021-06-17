@@ -18,7 +18,8 @@ def quiz_edit_structure(action, param, test_obj):
         db.session.add(test_obj)
         db.session.commit()
         print('test questions AAAA', test_obj.questions)
-        return redirect('/edit/' + str(test_obj.id) + '/' + str(len(test_obj.questions)))
+        # return redirect('/edit/' + str(test_obj.id) + '/' + str(len(test_obj.questions)))
+        return redirect(f'/edit/{test_obj.id}/{str(len(test_obj.questions))}')
     elif action == 'remove_question':
         print('yeee')
         index = int(param) - 1
@@ -28,7 +29,7 @@ def quiz_edit_structure(action, param, test_obj):
         del test_obj.questions[index]
         db.session.add(test_obj)
         db.session.commit()
-        return redirect('/edit/' + str(index))
+        return redirect(f'/edit/{test_obj.id}/{index}')
 
 def update_test_question(form, test_obj):
     print(form)
@@ -56,7 +57,7 @@ def update_test_question(form, test_obj):
         question.data['correct'] = [ int(i) for i in correct_answers ]
         if question_type == '1' and len(question.data['correct']) == 1:
             question.data['correct'] = question.data['correct'][0]
-
+        print('updated data ', question.data)
     db.session.add(test_obj)
     db.session.add(question)
     db.session.commit()
@@ -100,7 +101,10 @@ def quiz_edit(test_id=None, number=None, action=None, param=None):
     if number < 0 or number >= len(questions):
         number = 0
 
-    question = questions[number]
+    question = None
+    if len(questions) > 0:
+        question = questions[number]
+
     return render_template('test_edit.html', test_params=test, question=question, number_of_questions=len(test.questions), current_index=number + 1)
 
 
