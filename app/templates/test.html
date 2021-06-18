@@ -11,10 +11,10 @@ document.forms['anwser'].action = '{{action}}'; document.forms['anwser'].submit(
 {% endmacro %}
 
 {% block content %}
-<section class="container mb-5">
+<section class="container mb-5" style="min-height: 600px;">
 	<!-- Test title -->
 	<div class="test_title">
-		<h1>{{ test_params.title }}</h1>
+		<h1 class="mt-4">{{ test_params.title }}</h1>
 		<h2>{{ test_params.author }}</h2>
 	</div>
 
@@ -25,13 +25,12 @@ document.forms['anwser'].action = '{{action}}'; document.forms['anwser'].submit(
 					<a class="page-link text-center" href="#" onclick="{{ submit_form_to('/test/' ~ (i + 1)) }}">{{ i + 1 }}</a>
 				</li>
 		{% endfor %}
-		<li class="page-item flex-fill"><a class="page-link text-center" href="#">Podsumowanie</a></li>
+		<li class="page-item flex-fill"><a class="page-link text-center" onclick="{{ submit_form_to('/test/0') }}">Zakończ</a></li>
 	</ul>
 
 	<!-- Question score -->
 	<div class="row">
-		<h3 class="col-sm-6">Pytanie {{ current_index }}</h3>
-		<h3 class="col-sm-6 text-right">Punkty: {{ question.points }}</h3>
+		<h3 class="col mb-3">Pytanie {{ current_index }} ({{ question.points }} pkt.)</h3>
 	</div>
 
 	<!-- Question content -->
@@ -74,7 +73,7 @@ document.forms['anwser'].action = '{{action}}'; document.forms['anwser'].submit(
 				<div class="carousel-inner">
 				{% for image in question.image %}
 					<div class="carousel-item {{ 'active' if loop.index == 1 }}">
-						<img class="img-fluid" src="{{ url_for('static',filename=('images/test_images/' + image)) }}" alt="??">
+						<img class="img-fluid" src="{{ image }}" alt="??">
 					</div>
 				{% endfor %}
 			  </div>
@@ -92,22 +91,20 @@ document.forms['anwser'].action = '{{action}}'; document.forms['anwser'].submit(
 </section>
 
 <!-- Bottom controls -->
-<section class="container bg-light border py-2 mb-5">
+<section class="container bg-light py-2 mb-5">
 	<div class="row">
 		<div class="col-sm-4 text-left"></div>
 		<div class="col-sm-4 text-center"> 
 			<div class="btn-group">
-				<!-- <a class="btn btn-primary {{ 'disabled' if current_index == 1 }}" href="/test/{{ current_index - 1 }}">Poprzednie</a> -->
+				{% if current_index != 1 %}
 				<input type="submit" class="btn btn-primary {{ 'disabled' if current_index == 1 }}" value="Poprzednie" onclick="{{ submit_form_to('/test/' ~ (current_index - 1)) }}">
-				<a class="btn btn-dark disabled">{{ current_index }} / {{ test_params.number_of_questions }}</a	>
-				<input type="submit" class="btn btn-primary {{ 'disabled' if current_index == test_params.number_of_questions }}" value="Następne" onclick="{{ submit_form_to('/test/' ~ (current_index + 1)) }}">
-				<!-- <a class="btn btn-primary {{ 'disabled' if current_index == test_params.number_of_questions }}" href="/test/{{ current_index + 1 }}">Następne</a> -->
+				{% endif %}
+				<a class="btn btn-dark disabled">{{ current_index }} / {{ test_params.questions|length }}</a>
+				{% if current_index != test_params.questions|length %}
+				<input type="submit" class="btn btn-primary" value="Następne" onclick="{{ submit_form_to('/test/' ~ (current_index + 1)) }}">
+				{% endif %}
 			</div>
 			
-		</div>
-		<div class="col-sm-4 text-right">
-			<a class="btn btn-primary" href="/test/0">Zakończ</a>
-			<a class="btn btn-primary" href="#">help</a>
 		</div>
 	</div>
 </section>

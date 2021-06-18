@@ -44,6 +44,9 @@ def quiz(number):
         del session['answer_id']
         return redirect(url_for('index'))  # zmień na strone główną.
 
+    term_obj = TestTerm.query.filter_by(id=answer_obj.test_term_id).first()
+    test_obj = Test.query.filter_by(id=term_obj.testid).first()
+
     print('answer ', answer_obj, answer_obj.id)
     if len(request.form) > 0:
         term = TestTerm.query.filter_by(id=answer_obj.test_term_id).first()
@@ -54,10 +57,7 @@ def quiz(number):
     if number == 0:
         # To też coś nie działa jak trzeba, po kliknięciu zakończ, odpowiedź pytania nie jest zapisywana.
         print('updating test')
-        return redirect('/test_finish')
-
-    term_obj = TestTerm.query.filter_by(id=answer_obj.test_term_id).first()
-    test_obj = Test.query.filter_by(id=term_obj.testid).first()
+        return redirect(url_for('summary', term_id=term_obj.id))
 
     questions = test_obj.questions
     number -= 1
@@ -82,6 +82,8 @@ def update_previous_question(form, answer_obj, test_obj):
 
     anwser = form.getlist('anwser')
     index = int(question_index) - 1
+
+    print('Updating question', index)
 
     print(anwser, index)
 
@@ -108,16 +110,11 @@ def update_previous_question(form, answer_obj, test_obj):
     db.session.commit()
 
 
-@app.route('/test_finish')
-def quiz_end():
-    if session.get('answer_id') is not None:
-        answer_obj = TestAnswer().query.filter_by(id=session['answer_id']).first()
-        del session['answer_id']
-    return redirect(url_for('summary'))
-
-
 @app.route('/summary/<int:term_id>')
 def summary(term_id):
+    if session.get('answer_id') is not None:
+        del session['answer_id']
+
     flash('Test zakończony', 'success')
 
     term = TestTerm.query.filter_by(id=term_id).first()

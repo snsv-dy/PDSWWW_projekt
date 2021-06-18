@@ -170,6 +170,9 @@ class QuestionAnswer(db.Model):
             db.session.commit()
 
     def calc_points(self):
+        if self.data is None:
+            return 0
+
         if self.question.type == Question.SINGLE_CHOICE:
             correct = self.question.data['correct']
             provided = self.data
