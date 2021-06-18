@@ -4,7 +4,6 @@ from app import app
 from app.models import *
 
 
-# @app.route('/edit/structure/<action>/<param>', methods=['GET', 'POST'])
 def quiz_edit_structure(action, param, test_obj, img_url=None):
     print('quiz edit', test_obj)
     if action == 'add_question' and param in ['0', '1', '2']:
@@ -23,11 +22,19 @@ def quiz_edit_structure(action, param, test_obj, img_url=None):
         print('Removing question')
         index = int(param) - 1
 
-        # To na dole nie działa, i pytania nie są usuwane z bazy danych.
-        # Question.query.filter_by(id=test_obj.questions[index].id).delete()
-        del test_obj.questions[index]
-        db.session.add(test_obj)
-        db.session.commit()
+        question = Question.query.filter_by(testid=test_obj.id, nr=index).first()
+        if question is not None:
+            # Remove this question
+            db.session.delete(question)
+
+            # And decrease number of all next questions
+            questions = Question.query.filter_by(testid=test_obj.id).all()
+            for question in questions:
+                if question.nr > index:
+                    question.nr -= 1
+                    db.session.add(question)
+
+            db.session.commit()
         return redirect(f'/edit/{test_obj.id}/{index}')
     elif action == 'remove_image':
         print('param', param)
