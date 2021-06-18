@@ -75,8 +75,7 @@ def quiz_edit_new():
     session['editing_id'] = test.id
     return redirect(url_for('quiz_edit', test_id=test.id))
 
-
-# @login_required
+@login_required
 @app.route('/edit/<int:test_id>')
 @app.route('/edit/<int:test_id>/<int:number>', methods=['POST', 'GET'])
 @app.route('/edit/<int:test_id>/-1/<action>/<param>', methods=['GET', 'POST'])
