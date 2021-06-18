@@ -78,7 +78,12 @@ def update_test_question(form, test_obj):
 
     test_obj.title = title
     question = test_obj.questions[index]
-    question.points = float(points)
+
+    try:
+        question.points = max(float(points), 0)
+    except:
+        question.points = 0
+
     question.question = question_content
 
     if question_type in ['0', '1']:
