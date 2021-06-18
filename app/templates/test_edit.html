@@ -108,7 +108,7 @@
 				{% if question.image %}
 					{% for image in question.image %}
 						<div class="carousel-item text-right {{ 'active' if loop.index == 1 }}">
-							<button class="btn btn-danger">Usuń obraz</button>
+							<a href="/edit/{{ test_params.id }}/-1/remove_image/{{ current_index - 1 }};{{ loop.index - 1 }}" class="btn btn-danger">Usuń obraz</a>
 							<img class="img-fluid" src="{{ url_for('static',filename=('images/test_images/' + image)) }}" alt="{{ image }}">
 						</div>
 					{% endfor %}
@@ -126,7 +126,16 @@
 					<span class="carousel-control-next-icon"></span>
 				</a>
 			</div>
-			<a class="btn btn-primary" href="#">Dodaj obraz</a>
+			<form action="/edit/{{ test_params.id }}/-1/add_image/{{ current_index - 1 }}" method="post">
+				<div class="input-group mb-3">
+					<input class="form-control" type="text" name="new_img_url" placeholder="url obrazu">
+					<!-- <input type="text" class="form-control" placeholder="Search"> -->
+					<div class="input-group-append">
+					  <!-- <button class="btn btn-success" type="submit">Go</button> -->
+					  <input class="btn btn-primary" type="submit" value="Dodaj obraz">
+					</div>
+				  </div>
+			</form>
 		</div>
 	</div>
 	{% endif %}
