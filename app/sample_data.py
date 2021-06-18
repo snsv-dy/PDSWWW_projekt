@@ -19,6 +19,14 @@ def initialize():
     for i in range(1):
         add_test(teacher)
 
+    # DELETE BEFORE PUSH
+    #
+    empty_test = Test(title='Empty for testing', time=25)
+    teacher.tests.append(empty_test)
+    db.session.add(empty_test)
+    #
+    #
+
     db.session.commit()
 
 

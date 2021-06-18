@@ -50,7 +50,6 @@
 	</div>
 
 	{% if question != None %}
-
 	<!-- Question score -->
 	<div class="row">
 		<h3 class="col-sm-6">Pytanie {{ current_index }}</h3>
@@ -75,11 +74,11 @@
 								<div class="input-group mb-3">
 									<div class="input-group-prepend">
 									  <div class="input-group-text">
-										<input type="{{ 'checkbox' if question.type == 0 else 'radio' }}" name="answer" value={{ loop.index - 1}} {{'checked' if question.data['correct'] and ((question.type == 0 and (loop.index - 1) in question.data['correct']) or (question.type == 1 and loop.index - 1 == question.data['correct'])) }}> 
+										<input type="{{ 'checkbox' if question.type == 0 else 'radio' }}" name="answer" value={{ loop.index - 1}} {{'checked' if ((question.type == 0 and (loop.index - 1) in question.data['correct']) or (question.type == 1 and (loop.index - 1) == question.data['correct'])) }}> 
 									  </div>
 									</div>
 									<input type="text" class="form-control" name="anwser_text" placeholder="Odpowiedź" value="{{ anwser }}">
-									<button class="btn btn-danger" onclick="remove_anwser(this)">X</button>
+									<button class="btn btn-danger {{ "disabled" if question.data['all']|length == 1}}" onclick="remove_anwser(this)">X</button>
 								  </div>
 						<!--{{ loop.index + 1 }} </div> -->
 					{% endfor %}
@@ -109,8 +108,8 @@
 				{% if question.image %}
 					{% for image in question.image %}
 						<div class="carousel-item text-right {{ 'active' if loop.index == 1 }}">
-							<button class="btn btn-danger">Usuń obraz</button>
-							<img class="img-fluid" src="{{ url_for('static',filename=('images/test_images/' + image)) }}" alt="{{ image }}">
+							<a href="/edit/{{ test_params.id }}/-1/remove_image/{{ current_index - 1 }};{{ loop.index - 1 }}" class="btn btn-danger">Usuń obraz</a>
+							<img class="img-fluid" src="{{ image }}" alt="{{ image }}">
 						</div>
 					{% endfor %}
 				{% else %}
@@ -127,7 +126,16 @@
 					<span class="carousel-control-next-icon"></span>
 				</a>
 			</div>
-			<a class="btn btn-primary" href="#">Dodaj obraz</a>
+			<form action="/edit/{{ test_params.id }}/-1/add_image/{{ current_index - 1 }}" method="post">
+				<div class="input-group mb-3">
+					<input class="form-control" type="text" name="new_img_url" placeholder="url obrazu">
+					<!-- <input type="text" class="form-control" placeholder="Search"> -->
+					<div class="input-group-append">
+					  <!-- <button class="btn btn-success" type="submit">Go</button> -->
+					  <input class="btn btn-primary" type="submit" value="Dodaj obraz">
+					</div>
+				  </div>
+			</form>
 		</div>
 	</div>
 

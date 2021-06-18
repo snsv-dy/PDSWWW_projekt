@@ -20,17 +20,19 @@
 
 
 {% macro render_answer_answer(answer) -%}
-	{% if answer.question.type == 1 %}
-		{{ answer.question.data['all'][answer.data] }}
-	{% elif answer.question.type == 0 %}
-        <ul>
-        {% for index in answer.data %}
-            <li>{{ answer.question.data['all'][index] }}</li>
-        {% endfor %}
-        </ul>
-	{% elif answer.question.type == 2 %}
-		{{ answer.data }}
-	{% endif %}
+    {% if answer.data %}
+        {% if answer.question.type == 1 %}
+            {{ answer.question.data['all'][answer.data] }}
+        {% elif answer.question.type == 0 %}
+            <ul>
+            {% for index in answer.data %}
+                <li>{{ answer.question.data['all'][index] }}</li>
+            {% endfor %}
+            </ul>
+        {% elif answer.question.type == 2 %}
+            {{ answer.data }}
+        {% endif %}
+   {% endif %}
 {%- endmacro %}
 
 

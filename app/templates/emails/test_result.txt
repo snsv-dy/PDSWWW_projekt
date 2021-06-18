@@ -1,10 +1,12 @@
 {% macro render_answer(answer) -%}
+{%- if answer.data %}
 {%- if answer.question.type == answer.question.SINGLE_CHOICE %}{{ answer.question.data['all'][answer.data] }}
 {%- elif answer.question.type == answer.question.MULTIPLE_CHOICE %}
 {%- for index in answer.data %}
 - {{ answer.question.data['all'][index] }}
 {%- endfor -%}
 {%- elif answer.question.type == answer.question.OPEN %}{{ answer.data }}
+{%- endif %}
 {%- endif %}
 {%- endmacro %}
 Witaj!

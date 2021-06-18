@@ -7,3 +7,7 @@
 .test_title > h1{
 	margin-right: 10px;
 }
+
+.answered {
+	background-color: #beecf4;
+}

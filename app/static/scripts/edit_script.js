@@ -41,20 +41,20 @@ function post_all_inputs(destination) {
 	form.appendChild(create_input('question_type', question_type));
 
 	if ('anwser_text' in document.forms[1] && (question_type == '0' || question_type == '1')) {
-		if(typeof document.forms[1].anwser_text[Symbol.iterator] === 'function'){ // Sprawdzanie czy w formularzu znajduje się więcej niż 1 odpowiedź.
+		if (typeof document.forms[1].anwser_text[Symbol.iterator] === 'function') { // Sprawdzanie czy w formularzu znajduje się więcej niż 1 odpowiedź.
 			for (let e of document.forms[1].anwser_text) {
 				form.appendChild(create_input(e.name, e.value));
 			}
 			for (let e of document.forms[1].answer) {
-				if(e.checked)
+				if (e.checked)
 					form.appendChild(create_input(e.name, e.value));
 			}
-		}else{
+		} else {
 			var e = document.forms[1].anwser_text;
 			form.appendChild(create_input(e.name, e.value));
 			e = document.forms[1].answer;
 
-			if(e.checked)
+			if (e.checked)
 				form.appendChild(create_input(e.name, e.value));
 		}
 	}
@@ -65,7 +65,7 @@ function post_all_inputs(destination) {
 }
 
 function add_anwser(type) {
-	var div = document.createElement('div'); 
+	var div = document.createElement('div');
 	div.className = 'input-group mb-3';
 
 	var div_prepend = document.createElement('div');
@@ -75,11 +75,12 @@ function add_anwser(type) {
 	div_text.className = 'input-group-text';
 
 	var n_questions = 0;
-	if('answer' in document.forms[1]){
-		if(typeof document.forms[1].answer[Symbol.iterator] === 'function') {
+	if ('answer' in document.forms[1]) {
+		if (typeof document.forms[1].answer[Symbol.iterator] === 'function') {
 			n_questions = document.forms[1].answer.length;
-		}else{
+		} else {
 			n_questions = 1;
+			document.forms[1].anwser_text.parentElement.lastElementChild.classList.remove('disabled');
 		}
 	}
 
@@ -113,5 +114,18 @@ function add_anwser(type) {
 
 function remove_anwser(e) {
 	console.log(e);
-	document.forms[1].removeChild(e.parentElement);
+	if (typeof document.forms[1].answer[Symbol.iterator] === 'function') {
+		var before_length = document.forms[1].answer.length;
+		document.forms[1].removeChild(e.parentElement);
+		if (before_length == 2) {
+			document.forms[1].anwser_text.parentElement.lastElementChild.classList.add('disabled');
+			document.forms[1].answer.value = 0;
+		} else {
+			var i = 0;
+			for(let check of document.forms[1].answer){
+				check.value = i.toString();
+				i++;
+			}
+		}
+	}
 }
