@@ -17,7 +17,6 @@ def quiz_edit_structure(action, param, test_obj, img_url=None):
         db.session.add(question)
         db.session.add(test_obj)
         db.session.commit()
-        print('test questions AAAA', test_obj.questions)
         # return redirect('/edit/' + str(test_obj.id) + '/' + str(len(test_obj.questions)))
         return redirect(f'/edit/{test_obj.id}/{str(len(test_obj.questions))}')
     elif action == 'remove_question':
@@ -123,9 +122,7 @@ def quiz_edit(test_id=None, number=None, action=None, param=None):
 
     editable = session.get('editing_id')
     if not editable:
-        session['editing_id'] = 1
-        editable = 1
-        # return redirect(url_for('test_preview', test_id=test.id))
+        return redirect(url_for('test_preview', test_id=test.id))
 
     if len(request.form) > 0 and 'new_img_url' not in request.form:
         update_test_question(request.form, test)
