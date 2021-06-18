@@ -26,17 +26,22 @@ def before_test(term_id):
 
     return render_template('before_test.html', term=term, form=form)
 
+def get_question_answer(answer_obj, index):
+    for answer in answer_obj.answers:
+        question = Question.query.filter_by(id=answer.question_id).first()
+        if question.nr - 1 == index:
+            print(f"found answer for question {question.nr}")
+            return answer
+    return None
 
 @app.route('/test/<int:number>', methods=['GET', 'POST'])
 def quiz(number):
-    print('quiz-1', number)
     if session.get('answer_id') is None:
         # Tymczasowe przypisywanie odpowiedzi na test
         # powinno być ustawiwane przed testem.
         flash('Nie rozpoczęto testu.', 'error')
         return redirect('/')
 
-    print('session: ', session.get('answer_id'))
     answer_obj = TestAnswer().query.filter_by(id=session['answer_id']).first()
     if answer_obj is None:
         # Prawdopodobnie jeszcze jest id z poprzedniej sesji i trzeba usunąć ciasteczko,
@@ -67,13 +72,18 @@ def quiz(number):
 
     question = questions[number]
 
-    answer = None  # quiz.question_answers.get(number)
-    # if answer:
-    if len(answer_obj.answers) > number:
-        answer = answer_obj.answers[number].data
-    print(answer)
+    answer = get_question_answer(answer_obj, number)  # quiz.question_answers.get(number)
+    
+    print(f"answers[{len(answer_obj.answers)}]: ", end="")
+    for i, v in enumerate(answer_obj.answers):
+        print(f"({i}): {v.data}, ", end="")
+    print()
+
+    if answer is not None:
+        answer = answer.data
+        
     return render_template('test.html', test_params=test_obj, question=question, anwsers=answer,
-                           current_index=number + 1)
+                           current_index=number + 1, answered_indexes=[a.nr - 1 for a in test_obj.questions if a.id in [k.question_id for k in answer_obj.answers if k.data is not None]])
 
 
 def update_previous_question(form, answer_obj, test_obj):
@@ -85,22 +95,22 @@ def update_previous_question(form, answer_obj, test_obj):
 
     print(anwser, index)
 
-    question_obj = None
-    if index < len(answer_obj.answers):
-        question_obj = answer_obj.answers[index]
-    else:
+    question_obj = get_question_answer(answer_obj, index)
+    if question_obj is None:
+        print(f'question obj is none, index {index}')
         question_obj = QuestionAnswer()
-        answer_obj.answers.append(question_obj)
         test_obj.questions[index].answers.append(question_obj)
+        answer_obj.answers.append(question_obj)
 
         db.session.add(test_obj.questions[index])
         db.session.add(test_obj)
 
+    question_obj.data = None
     if question_type == '0' and len(anwser) > 0:
         question_obj.data = [int(i) for i in anwser]
     elif question_type == '1' and len(anwser) > 0:
         question_obj.data = int(anwser[0])
-    elif question_type == '2' and len(anwser) > 0:
+    elif question_type == '2' and len(anwser) > 0 and anwser[0] != '':
         question_obj.data = anwser[0]
 
     db.session.add(question_obj)
