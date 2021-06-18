@@ -20,7 +20,7 @@ def quiz_edit_structure(action, param, test_obj):
         print('test questions AAAA', test_obj.questions)
         return redirect('/edit/' + str(test_obj.id) + '/' + str(len(test_obj.questions)))
     elif action == 'remove_question':
-        print('yeee')
+        print('Removing question')
         index = int(param) - 1
 
         # To na dole nie działa, i pytania nie są usuwane z bazy danych.
@@ -28,7 +28,7 @@ def quiz_edit_structure(action, param, test_obj):
         del test_obj.questions[index]
         db.session.add(test_obj)
         db.session.commit()
-        return redirect('/edit/' + str(index))
+        return redirect('/edit/' + str(test_obj.id))
 
 def update_test_question(form, test_obj):
     print(form)
@@ -74,16 +74,17 @@ def quiz_edit_new():
     return redirect(url_for('quiz_edit', test_id=test.id))
 
 
-# @login_required
 @app.route('/edit/<int:test_id>')
 @app.route('/edit/<int:test_id>/<int:number>', methods=['POST', 'GET'])
 @app.route('/edit/<int:test_id>/-1/<action>/<param>', methods=['GET', 'POST'])
+@login_required
 def quiz_edit(test_id=None, number=None, action=None, param=None):
-    if test_id == None:
-        flash('Nieznany test.', 'error')
-        return redirect(url_for('/manage'))
-
     test = Test.query.filter_by(id=test_id).first()
+    print(test_id, test)
+
+    if test is None:
+        flash('Nieznany test', 'error')
+        return redirect(url_for('manage'))
 
     if len(request.form) > 0:
         update_test_question(request.form, test)
@@ -100,7 +101,7 @@ def quiz_edit(test_id=None, number=None, action=None, param=None):
     if number < 0 or number >= len(questions):
         number = 0
 
-    question = questions[number]
+    question = questions[number] if number < len(questions) else None
     return render_template('test_edit.html', test_params=test, question=question, number_of_questions=len(test.questions), current_index=number + 1)
 
 

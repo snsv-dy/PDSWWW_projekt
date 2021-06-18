@@ -12,14 +12,13 @@
 {% endblock %}
 
 {% block content %}
-<section class="container my-5 border">
+<section class="container my-5 border" style="min-height: 600px;">
 	<!-- Test title -->
 	<div class="row my-3 test_title">
 		<div class="col-sm-12">
 			<form class="d-flex flex-row" action="/edit/{{ test_params.id }}/title" method="post">
+				<h3 class="mr-3">Nazwa testu</h3>
 				<input class="form-control mr-2" style="width: 300px" type="text" name="test_title" placeholder="Tytuł testu" id="test_title" value="{{ test_params.title }}">
-				<!-- <input class="btn btn-primary " type="submit" value="Zapisz tytuł"> -->
-				<h3>Autor: {{ test_params.author }}</h3>
 			</form>
 		</div>
 	</div>
@@ -45,15 +44,18 @@
 					</div>
 				</li>
 			</ul>
-			<a class="btn btn-primary align-self-baseline mx-3" href="#" onclick="post_all_inputs('/edit/{{ test_params.id }}/{{ current_index }}')">Zapisz</a>
+			<a class="btn btn-primary align-self-baseline ml-1" href="#" onclick="post_all_inputs('/edit/{{ test_params.id }}/{{ current_index }}')">Zapisz</a>
+			<a class="btn btn-primary align-self-baseline ml-1" href="{{ url_for('manage') }}">Zakończ</a>
 		</div>
-	</div> 
+	</div>
+
+	{% if question != None %}
 
 	<!-- Question score -->
 	<div class="row">
 		<h3 class="col-sm-6">Pytanie {{ current_index }}</h3>
 		<div class="col-sm-6 d-flex">
-			<h3 class="text-right">Punkty:</h3>
+			<h3 class="text-right mr-3">Punkty:</h3>
 			<input class="form-control inline" type="text" name="points" id="test_points" value="{{ question.points }}" >
 		</div>
 	</div>
@@ -128,25 +130,9 @@
 			<a class="btn btn-primary" href="#">Dodaj obraz</a>
 		</div>
 	</div>
-</section>
 
-<!-- Bottom controls -->
-<section class="container bg-light border py-2 mb-5">
-	<div class="row">
-		<div class="col-sm-4 text-left"></div>
-		<div class="col-sm-4 text-center"> 
-			<div class="btn-group">
-				<a class="btn btn-primary {{ 'disabled' if current_index == 1 }}" href="#" onclick="post_all_inputs('/edit/{{ test_params.id }}/{{ current_index - 1}}')">Poprzednie</a>
-				<a class="btn btn-dark disabled">{{ current_index }} / {{ number_of_questions }}</a	>
-				<a class="btn btn-primary {{ 'disabled' if current_index == number_of_questions }}" href="#"  onclick="post_all_inputs('/edit/{{ test_params.id }}/{{ current_index + 1}}')">Następne</a>
-			</div>
-			
-		</div>
-		<div class="col-sm-4 text-right">
-			<a class="btn btn-primary" href="#">Zakończ</a>
-			<a class="btn btn-primary" href="#">help</a>
-		</div>
-	</div>
+	{% endif %}
+
 </section>
 {% endblock %}
 
