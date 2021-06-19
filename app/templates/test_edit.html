@@ -78,7 +78,7 @@
 									  </div>
 									</div>
 									<input type="text" class="form-control" name="anwser_text" placeholder="Odpowiedź" value="{{ anwser }}">
-									<button class="btn btn-danger {{ "disabled" if question.data['all']|length == 1}}" onclick="remove_anwser(this)">X</button>
+									<button class="btn btn-danger ml-2 {{ "disabled" if question.data['all']|length == 1}}" onclick="remove_anwser(this)">X</button>
 								  </div>
 						<!--{{ loop.index + 1 }} </div> -->
 					{% endfor %}
@@ -108,7 +108,7 @@
 				{% if question.image %}
 					{% for image in question.image %}
 						<div class="carousel-item text-right {{ 'active' if loop.index == 1 }}">
-							<a href="/edit/{{ test_params.id }}/-1/remove_image/{{ current_index - 1 }};{{ loop.index - 1 }}" class="btn btn-danger">Usuń obraz</a>
+							<a href="/edit/{{ test_params.id }}/-1/remove_image/{{ current_index - 1 }};{{ loop.index - 1 }}" class="btn btn-danger mb-2 mt-2">Usuń obraz</a>
 							<img class="img-fluid" src="{{ image }}" alt="{{ image }}">
 						</div>
 					{% endfor %}
@@ -127,7 +127,7 @@
 				</a>
 			</div>
 			<form action="/edit/{{ test_params.id }}/-1/add_image/{{ current_index - 1 }}" method="post">
-				<div class="input-group mb-3">
+				<div class="input-group mb-3 mt-3">
 					<input class="form-control" type="text" name="new_img_url" placeholder="url obrazu">
 					<!-- <input type="text" class="form-control" placeholder="Search"> -->
 					<div class="input-group-append">
