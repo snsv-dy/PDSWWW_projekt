@@ -27,11 +27,10 @@ def before_test(term_id):
     return render_template('before_test.html', term=term, form=form)
 
 def get_question_answer(answer_obj, index):
-    for answer in answer_obj.answers:
-        question = Question.query.filter_by(id=answer.question_id).first()
-        if question.nr - 1 == index:
-            print(f"found answer for question {question.nr}")
-            return answer
+    answers = [answer for answer in answer_obj.answers if answer.question.nr == index]
+    if answers is not None:
+        print(f"found answer for question {index}")
+        return answers[0]
     return None
 
 @app.route('/test/<int:number>', methods=['GET', 'POST'])
@@ -96,6 +95,7 @@ def update_previous_question(form, answer_obj, test_obj):
     if question_obj is None:
         print(f'question obj is none, index {index}')
         question_obj = QuestionAnswer()
+        print("Creating answer")
         test_obj.questions[index].answers.append(question_obj)
         answer_obj.answers.append(question_obj)
 
