@@ -78,7 +78,7 @@
 									  </div>
 									</div>
 									<input type="text" class="form-control" name="anwser_text" placeholder="Odpowiedź" value="{{ anwser }}">
-									<button class="btn btn-danger ml-2 {{ "disabled" if question.data['all']|length == 1}}" onclick="remove_anwser(this)">X</button>
+									<button class="btn btn-danger {{ "disabled" if question.data['all']|length == 1}}" onclick="remove_anwser(this)">X</button>
 								  </div>
 						<!--{{ loop.index + 1 }} </div> -->
 					{% endfor %}

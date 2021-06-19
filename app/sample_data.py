@@ -15,17 +15,17 @@ def initialize():
     teacher.password = 'password'
     db.session.add(teacher)
 
-    # # for i in range(5):
-    # for i in range(1):
-    #     add_test(teacher)
+    # for i in range(5):
+    for i in range(1):
+        add_test(teacher)
+
+    # DELETE BEFORE PUSH
+    # TOO LATE XD
+    empty_test = Test(title='Empty for testing', time=25)
+    teacher.tests.append(empty_test)
+    db.session.add(empty_test)
     #
-    # # DELETE BEFORE PUSH
-    # # TOO LATE XD
-    # empty_test = Test(title='Empty for testing', time=25)
-    # teacher.tests.append(empty_test)
-    # db.session.add(empty_test)
-    # #
-    # #
+    #
 
     db.session.commit()
 

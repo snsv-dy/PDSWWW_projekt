@@ -176,19 +176,23 @@ class QuestionAnswer(db.Model):
 
         if self.question.type == Question.SINGLE_CHOICE:
             correct = self.question.data['correct']
-            if not correct:
+            if False:
+                print('******* no correct single')
                 return 0
             provided = self.data
+            print('************** validating single choice: ', correct, provided)
             return self.question.points if provided == correct else 0
     
         elif self.question.type == Question.MULTIPLE_CHOICE:
             correct = self.question.data['correct']
             if not correct:
+                print('******* no correct multiple')
                 return 0
             provided = self.data
     
             points_per_option = self.question.points / len(correct)
             points = 0
+            print('******** validating multiple choice: ', correct, provided)
             for option in provided:
                 if option in correct:
                     points += points_per_option

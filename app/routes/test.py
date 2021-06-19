@@ -27,7 +27,7 @@ def before_test(term_id):
     return render_template('before_test.html', term=term, form=form)
 
 def get_question_answer(answer_obj, index):
-    answers = [answer for answer in answer_obj.answers if answer.question.nr == index]
+    answers = [answer for answer in answer_obj.answers if answer.question.nr == index+1]
     if answers:
         print(f"found answer for question {index}")
         return answers[0]
@@ -108,9 +108,11 @@ def update_previous_question(form, answer_obj, test_obj):
 
     question_obj.data = None
     if question_type == '0' and len(anwser) > 0:
-        question_obj.data = [int(i) for i in anwser]
+        question_obj.data = [int(i)-1 for i in anwser]
     elif question_type == '1' and len(anwser) > 0:
-        question_obj.data = int(anwser[0])
+        print('Updating single choice question ---------------')
+        print(int(anwser[0])-1)
+        question_obj.data = int(anwser[0])-1
     elif question_type == '2' and len(anwser) > 0 and anwser[0] != '':
         question_obj.data = anwser[0]
 

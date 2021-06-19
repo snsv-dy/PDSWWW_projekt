@@ -47,7 +47,7 @@ document.forms['anwser'].action = '{{action}}'; document.forms['anwser'].submit(
 					{% for anwser in question.data['all'] %}
 						<div class="form-check">
 							<label class="form-check-label">
-								<input type="{{ 'checkbox' if question.type == 0 else 'radio' }}" class="form-check-input" name="anwser" value="{{ loop.index }}" {{'checked' if anwsers and ((question.type == 0 and loop.index in anwsers) or (question.type == 1 and loop.index == anwsers)) }}> {{ anwser }}
+								<input type="{{ 'checkbox' if question.type == 0 else 'radio' }}" class="form-check-input" name="anwser" value="{{ loop.index }}" {{'checked' if anwsers!=None and ((question.type == 0 and loop.index-1 in anwsers) or (question.type == 1 and loop.index-1 == anwsers)) }}> {{ anwser }}
 							</label>
 						</div>
 					{% endfor %}

@@ -9,7 +9,7 @@
       <p>Treść pytania: {{ answer.question.question }}</p>
       <p>Odpowiedź ucznia: {{ render_answer_answer(answer) }}</p>
       {% if answer.reviewed %}
-          <p>Liczba punktów: {{ answer.given_points }} / {{ answer.question.points }}</p>
+          <p>Przyznane punkty: {{ answer.given_points }} / {{ answer.question.points }}</p>
           <p class="text-success">{% if answer.question.type == answer.question.OPEN %}Oceniono ręcznie{% else %}Oceniono automatycznie{% endif %}</p>
       {% else %}
         <p class="text-danger">Pytanie wymaga ręcznej oceny</p>
@@ -64,8 +64,8 @@
                       <p>Nazwisko ucznia: {{ answer.full_name }}</p>
                       <p>Email ucznia: {{ answer.email }}</p>
                       <p>Data złożenia: {{ moment(answer.submit_time).format('LL h:mm') }}</p>
-                      <p>Liczba punktów: {% if answer.reviewed %}{{ answer.given_points }} / {{ answer.max_points }}{% else %}<span class="text-danger">nie oceniono</span>{% endif %}</p>
-                      <p>Ocena: {% if answer.reviewed %}{{ answer.grade }}{% else %}<span class="text-danger">nie oceniono</span>{% endif %}</p>
+                      <p>Liczba punktów: {% if answer.reviewed %}<span class="h1">{{ answer.given_points }} / {{ answer.max_points }}</span>{% else %}<span class="text-danger">nie oceniono</span>{% endif %}</p>
+                      <p>Ocena: {% if answer.reviewed %}<span class="h1">{{ answer.grade }}</span>{% else %}<span class="text-danger">nie oceniono</span>{% endif %}</p>
                   </div>
                 </div>
             </div>

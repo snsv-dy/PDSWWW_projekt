@@ -15,7 +15,7 @@ def review_term(term_id):
     term = TestTerm.query.filter_by(id=term_id).first()
 
     if not term.not_reviewed_answers:
-        flash('Nie ma żadnej pracy do sprawdzenia', 'success')
+        flash('Nie ma więcej prac do sprawdzenia', 'success')
         return redirect(url_for('details', test_id=term.test.id))
 
     return redirect(url_for('review_answer', answer_id=term.not_reviewed_answers[0].id))

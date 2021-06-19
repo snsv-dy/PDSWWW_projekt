@@ -7,7 +7,7 @@ from app.models import *
 def quiz_edit_structure(action, param, test_obj, img_url=None):
     print('quiz edit', test_obj)
     if action == 'add_question' and param in ['0', '1', '2']:
-        question = Question(type=int(param), question='', points=1.0, data=None, nr=len(test_obj.questions), image=[])
+        question = Question(type=int(param), question='', points=1.0, data=None, nr=len(test_obj.questions)+1, image=[])
 
         if param in ['0', '1']:
             question.data = {'all': [''], 'correct': [] if param == '0' else -1}
@@ -20,7 +20,7 @@ def quiz_edit_structure(action, param, test_obj, img_url=None):
         return redirect(f'/edit/{test_obj.id}/{str(len(test_obj.questions))}')
     elif action == 'remove_question':
         print('Removing question')
-        index = int(param) - 1
+        index = int(param)
 
         question = Question.query.filter_by(testid=test_obj.id, nr=index).first()
         if question is not None:
