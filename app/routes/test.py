@@ -28,7 +28,7 @@ def before_test(term_id):
 
 def get_question_answer(answer_obj, index):
     answers = [answer for answer in answer_obj.answers if answer.question.nr == index]
-    if answers is not None:
+    if answers:
         print(f"found answer for question {index}")
         return answers[0]
     return None

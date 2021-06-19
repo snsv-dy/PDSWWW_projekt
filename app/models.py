@@ -175,11 +175,15 @@ class QuestionAnswer(db.Model):
 
         if self.question.type == Question.SINGLE_CHOICE:
             correct = self.question.data['correct']
+            if not correct:
+                return 0
             provided = self.data
             return self.question.points if provided == correct else 0
     
         elif self.question.type == Question.MULTIPLE_CHOICE:
             correct = self.question.data['correct']
+            if not correct:
+                return 0
             provided = self.data
     
             points_per_option = self.question.points / len(correct)
