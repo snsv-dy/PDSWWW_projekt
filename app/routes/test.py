@@ -64,6 +64,10 @@ def quiz(number):
         return redirect(url_for('summary', term_id=term_obj.id))
 
     questions = test_obj.questions
+
+    if not questions:
+        return redirect(url_for('summary', term_id=term_obj.id))
+
     number -= 1
 
     if number < 0 or number >= len(questions):

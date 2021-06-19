@@ -139,12 +139,13 @@ class TestAnswer(db.Model):
 
     @property
     def grade(self):
+        if self.max_points == 0:
+            return 5
         percent = self.given_points / self.max_points * 100
         if percent >= 90: return 5
         elif percent >= 75: return 4
         elif percent >= 50: return 3
-        elif percent >= 30: return 2
-        else: return 1
+        else: return 2
 
     def get_answer_by_nr(self, nr):
         return [answer for answer in self.answers if answer.question.nr == nr][0]
