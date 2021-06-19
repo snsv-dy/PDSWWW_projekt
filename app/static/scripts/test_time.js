@@ -33,5 +33,6 @@ function updateTime(countDownDate, thisInterval) {
   if (distance < 0) {
 	clearInterval(thisInterval);
 	time_div.textContent = "Koniec czasu";
+	setTimeout(() => window.location.reload(true), 1000)
   }
 }
