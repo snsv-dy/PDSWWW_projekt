@@ -59,15 +59,19 @@ def quiz_edit_structure(action, param, test_obj, img_url=None):
             flash('Brak url nowego zdjęcia', 'error')
         else:
             question = test_obj.questions[int(param)]
+            print('---------------------------')
+            print(question)
             new_list = [i + '' for i in question.image]
+            print(new_list)
             new_list.append(img_url)
+            print(new_list)
             question.image = new_list
 
             db.session.add(question)
             db.session.add(test_obj)
             db.session.commit()
 
-        return redirect(f'/edit/{test_obj.id}/{int(param)}')
+        return redirect(f'/edit/{test_obj.id}/{int(param)+1}')
         # return redirect(f'/edit/{test_obj.id}/1')
 
 
