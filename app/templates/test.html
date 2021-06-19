@@ -6,6 +6,11 @@
     <link href="{{ url_for('static',filename='css/test-styles.css') }}" rel="stylesheet">
 {% endblock %}
 
+{% block top_scripts %} 
+	{{ super() }}
+	<script type="text/javascript" src="{{ url_for('static',filename='scripts/test_time.js') }}"></script>
+{% endblock %}
+
 {% macro submit_form_to(action) %}
 document.forms['anwser'].action = '{{action}}'; document.forms['anwser'].submit();
 {% endmacro %}
@@ -89,11 +94,10 @@ document.forms['anwser'].action = '{{action}}'; document.forms['anwser'].submit(
 		{% endif %}
 	</div>
 </section>
-
 <!-- Bottom controls -->
 <section class="container bg-light py-2 mb-5">
 	<div class="row">
-		<div class="col-sm-4 text-left"></div>
+		<div class="col-sm-4 text-left" id="time_div">{{ end_time }}</div>
 		<div class="col-sm-4 text-center"> 
 			<div class="btn-group">
 				{% if current_index != 1 %}

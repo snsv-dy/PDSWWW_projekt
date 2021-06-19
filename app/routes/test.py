@@ -2,6 +2,7 @@ from flask import render_template, flash, redirect, url_for, request, session
 from app import app
 from app.models import *
 from app.forms import BeforeTestForm
+from datetime import datetime, timedelta
 
 
 @app.route('/before_test/<int:term_id>', methods=['GET', 'POST'])
@@ -20,6 +21,8 @@ def before_test(term_id):
         db.session.add(answer_obj)
         db.session.commit()
         session['answer_id'] = answer_obj.id
+        end_time = datetime.now() + timedelta(minutes=term.test.time)
+        session['end_time'] = int(end_time.timestamp() * 1000)
 
         flash('Test się rozpoczyna, powodzenia!', 'success')
         return redirect(url_for('quiz', number=1))
@@ -32,6 +35,9 @@ def get_question_answer(answer_obj, index):
         print(f"found answer for question {index}")
         return answers[0]
     return None
+
+def time_exceeded(time):
+    return time is None or int(datetime.now().timestamp() * 1000) >= time
 
 @app.route('/test/<int:number>', methods=['GET', 'POST'])
 def quiz(number):
@@ -58,6 +64,9 @@ def quiz(number):
 
         update_previous_question(request.form, answer_obj, test)
 
+    if time_exceeded(session.get('end_time')):
+        return redirect(url_for('summary', term_id=term_obj.id))
+
     if number == 0:
         # To też coś nie działa jak trzeba, po kliknięciu zakończ, odpowiedź pytania nie jest zapisywana.
         print('updating test')
@@ -81,7 +90,8 @@ def quiz(number):
         answer = answer.data
         
     return render_template('test.html', test_params=test_obj, question=question, anwsers=answer,
-                           current_index=number + 1, answered_indexes=[a.nr - 1 for a in test_obj.questions if a.id in [k.question_id for k in answer_obj.answers if k.data is not None]])
+                           current_index=number + 1, answered_indexes=[a.nr - 1 for a in test_obj.questions if a.id in [k.question_id for k in answer_obj.answers if k.data is not None]],
+                           end_time=session.get('end_time'))
 
 
 def update_previous_question(form, answer_obj, test_obj):
@@ -125,6 +135,7 @@ def update_previous_question(form, answer_obj, test_obj):
 def summary(term_id):
     if session.get('answer_id') is not None:
         del session['answer_id']
+        del session['end_time']
 
     flash('Test zakończony', 'success')
 
