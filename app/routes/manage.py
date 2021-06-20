@@ -250,7 +250,12 @@ def import_test():
             flash('Nie wysłano żadnego pliku')
             return render_template('upload_file.html')
 
-        json_data = json.load(f)
+        try:
+            json_data = json.load(f)
+        except:
+            flash('Nadesłany plik nie jest poprawny!', 'error')
+            return redirect(url_for('manage'))
+
         check, err_msg = validate_json(json_data)
         if (check):
             test = Test(title=json_data['title'], time=json_data['time'])
