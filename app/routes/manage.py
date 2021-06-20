@@ -4,6 +4,8 @@ from json import JSONEncoder
 import pdb
 from flask import render_template, flash, redirect, url_for, session, make_response, request
 from flask_login import login_required, current_user
+from werkzeug.utils import secure_filename
+
 from app import app
 from app.models import *
 from app.util import *
@@ -188,22 +190,79 @@ def upload_test():
 @app.route('/import', methods = ['GET', 'POST'])
 @login_required
 def import_test():
+    def validate_json(data):
+        # FIELD MISSING IN HEADER
+        # LOOKS ATROCIOUS BUT all() with this datatype doesn't work
+        if 'title' not in data or 'time' not in data or 'questions' not in data:
+            return False, "fields missing in header"
+        # NO TITLE
+        if len(data['title']) < 1:
+            return False, "title is empty"
+        # TIME INCORRECT
+        if data['time'] < 1 or data['time'] > 60:
+            return False, "time is incorrect"
+        # NO QUESTIONS
+        if len(data['questions']) < 1:
+            return False, "no questions found in file"
+        # EACH QUESTION
+        for question in data['questions']:
+            # FIELD MISSING IN QUESTION
+            # LOOKS ATROCIOUS BUT all() with this datatype doesn't work
+            if 'question' not in question or 'points' not in question or 'images' not in question or 'type' not in question or 'answers' not in question or 'correct' not in question or 'type' not in question:
+                return False, "fields missing in question"
+            # QUESTION FIELDS EMPTY
+            if len(question['question']) < 0:
+                return False, "question title is empty"
+            # CHECK FOR TYPE
+            if question['type'] == Question.SINGLE_CHOICE or question['type'] == Question.MULTIPLE_CHOICE:
+                # NO ANSWERS
+                if len(question['answers']) < 1:
+                    return False, "no answers found for question"
+                # ANSWER FIELD EMPTY
+                for answer in question['answers']:
+                    if len(answer) < 1:
+                        return False, "empty field in answers"
+                # NO CORRECT ANSWERS (MULTIPLE CHECK ONLY)
+                if question['type'] == Question.MULTIPLE_CHOICE:
+                    if len(question['correct']) < 1:
+                        return False, "no correct answers found"
+                    # CORRECT ANSWER OUT OF RANGE
+                    for correct in question['correct']:
+                        if correct < 0 or correct > len(question['answers']):
+                            return False, "correct answer out of range"
+                # NO CORRECT ANSWERS (SINGLE CHOICE)
+                if question['type'] == Question.SINGLE_CHOICE:
+                    if question['correct'] < 0 or question['correct'] > len(question['answers']):
+                        return False, "correct answer out of range"
+                # CORRECT POINTS
+                if question['points'] < 1:
+                    return False, "incorrect value of points"
+            # TYPE DOES NOT MATCH ANY
+            elif question['type'] != Question.OPEN:
+                return False, "incorrect question type"
+        # VALIDATION CORRECT
+        return True, "all good"
     teacher = current_user
-    def validate_json(file):
-        # TODO: Implement file validation
-        return True
     if request.method == 'POST':
         f = request.files['file']
+        filename = secure_filename(f.filename)
+        if filename == '':
+            flash('Nie wysłano żadnego pliku')
+            return render_template('upload_file.html')
+
         json_data = json.load(f)
-        if (validate_json(json_data)):
+        check, err_msg = validate_json(json_data)
+        if (check):
             test = Test(title=json_data['title'], time=json_data['time'])
             teacher.tests.append(test)
             db.session.add(test)
-            for quesiton in json_data['questions']:
-                quest = Question(nr=quesiton['number'], question=quesiton['question'], points=quesiton['points'], image=quesiton['images'], type=quesiton['type'], data={'all': quesiton['answers'], 'correct': quesiton['correct']})
+            for question in json_data['questions']:
+                quest = Question(nr=question['number'], question=question['question'], points=question['points'], image=question['images'], type=question['type'], data={'all': question['answers'], 'correct': question['correct']})
                 test.questions.append(quest)
                 db.session.add(quest)
             db.session.commit()
+        else:
+            flash('Nadesłany plik jest uszkodzony! Opis błędu: ' + err_msg, 'error')
     return redirect(url_for('manage'))
 
 
