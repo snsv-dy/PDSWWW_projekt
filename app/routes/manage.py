@@ -163,7 +163,7 @@ def export_test(test_id):
             exp_quest = ExportedQuestion(question.nr, question.question, question.type, question.data['all'], question.data['correct'], question.points, question.image)
             exp_list.append(exp_quest)
         elif question.type == Question.SINGLE_CHOICE:
-            exp_quest = ExportedQuestion(question.nr, question.question, question.type, question.data['all'], [question.data['correct']], question.points, question.image)
+            exp_quest = ExportedQuestion(question.nr, question.question, question.type, question.data['all'], question.data['correct'], question.points, question.image)
             exp_list.append(exp_quest)
         elif question.type == Question.OPEN:
             exp_quest = ExportedQuestion(question.nr, question.question, question.type, [], [], question.points, question.image)
