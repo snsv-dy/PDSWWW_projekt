@@ -16,9 +16,17 @@
 	<!-- Test title -->
 	<div class="row my-3 test_title">
 		<div class="col-sm-12">
-			<form class="d-flex flex-row" action="/edit/{{ test_params.id }}/title" method="post">
-				<h3 class="mr-3">Nazwa testu</h3>
-				<input class="form-control mr-2" style="width: 300px" type="text" name="test_title" placeholder="Tytuł testu" id="test_title" value="{{ test_params.title }}">
+			<form class="" action="/edit/{{ test_params.id }}/title" method="post">
+				<div class="row">
+					<div class="col-md-6">
+						<h3 class="mr-3">Nazwa testu</h3>
+						<input class="form-control mr-2" style="width: 100%" type="text" name="test_title" placeholder="Tytuł testu" id="test_title" value="{{ test_params.title }}">
+					</div>
+					<div class="col-md-6">
+						<h3 class="mr-3">Czas testu</h3>
+						<input class="form-control mr-2" style="width: 100%" type="text" name="test_time" placeholder="10" id="test_time" value="{{ test_params.time }}">
+					</div>
+				</div>
 			</form>
 		</div>
 	</div>

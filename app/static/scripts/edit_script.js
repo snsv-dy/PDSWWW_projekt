@@ -2,6 +2,7 @@
 
 var static_input_ids = [
 	{ name: 'title', id: "test_title" },
+	{ name: 'time', id: "test_time" },
 	{ name: 'points', id: "test_points" },
 	{ name: 'question', id: "test_question" }
 ]

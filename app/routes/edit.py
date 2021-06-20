@@ -83,12 +83,16 @@ def update_test_question(form, test_obj):
 
     title = form.get('title')
     points = form.get('points')
+    time = form.get('time')
     question_content = form.get('question')
-
-    print('index', index, 'rest', title, points, question_content)
 
     test_obj.title = title
     question = test_obj.questions[index]
+
+    try:
+        test_obj.time = max(int(time), 1)
+    except:
+        test_obj.time = 1
 
     try:
         question.points = max(float(points), 0)
